@@ -24,6 +24,8 @@ const translations: Record<Language, Record<string, string>> = {
     'true': 'Vrai',
     'false': 'Faux',
     'explanation': 'Explication',
+    'feedback.correct': 'Bien joué ! C\'est la bonne réponse.',
+    'feedback.incorrect': 'Je comprends votre réponse, mais ce n\'est pas tout à fait ça.',
     'footer.rights': '© 2025 HistoVoyage - Tous droits réservés',
   },
   en: {
@@ -40,6 +42,8 @@ const translations: Record<Language, Record<string, string>> = {
     'true': 'True',
     'false': 'False',
     'explanation': 'Explanation',
+    'feedback.correct': 'Well done! That\'s the correct answer.',
+    'feedback.incorrect': 'I understand your reasoning, but that\'s not quite right.',
     'footer.rights': '© 2025 HistoryJourney - All rights reserved',
   },
   es: {
@@ -56,6 +60,8 @@ const translations: Record<Language, Record<string, string>> = {
     'true': 'Verdadero',
     'false': 'Falso',
     'explanation': 'Explicación',
+    'feedback.correct': '¡Bien hecho! Esa es la respuesta correcta.',
+    'feedback.incorrect': 'Entiendo tu razonamiento, pero no es del todo correcto.',
     'footer.rights': '© 2025 ViajeHistórico - Todos los derechos reservados',
   },
 };
