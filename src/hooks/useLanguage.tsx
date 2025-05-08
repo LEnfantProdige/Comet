@@ -60,14 +60,16 @@ const translations: Record<Language, Record<string, string>> = {
   },
 };
 
+// Create the context with undefined as default value
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export const LanguageProvider = ({ children }: { children: ReactNode }) => {
+// Define the provider as a proper React functional component
+export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [language, setLanguage] = useState<Language>(() => {
     // Récupérer la langue depuis localStorage ou utiliser la langue du navigateur
     const savedLang = localStorage.getItem('language');
     if (savedLang === 'fr' || savedLang === 'en' || savedLang === 'es') {
-      return savedLang;
+      return savedLang as Language;
     }
     
     const browserLang = navigator.language.substring(0, 2);
@@ -93,6 +95,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+// Hook to use the language context
 export const useLanguage = (): LanguageContextType => {
   const context = useContext(LanguageContext);
   if (context === undefined) {
