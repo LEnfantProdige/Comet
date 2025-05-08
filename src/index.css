@@ -46,6 +46,45 @@
     --sidebar-border: 30 15% 80%;
     --sidebar-ring: 350 65% 34%;
   }
+  
+  .dark {
+    --background: 220 40% 12%;
+    --foreground: 36 33% 97%;
+
+    --card: 220 40% 15%;
+    --card-foreground: 36 33% 97%;
+
+    --popover: 220 40% 15%;
+    --popover-foreground: 36 33% 97%;
+
+    --primary: 42 80% 60%;
+    --primary-foreground: 220 40% 12%;
+
+    --secondary: 220 35% 20%;
+    --secondary-foreground: 36 33% 97%;
+
+    --muted: 220 35% 20%;
+    --muted-foreground: 36 20% 80%;
+
+    --accent: 42 80% 60%;
+    --accent-foreground: 220 40% 12%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 36 33% 97%;
+
+    --border: 220 35% 25%;
+    --input: 220 35% 25%;
+    --ring: 42 80% 60%;
+
+    --sidebar-background: 220 35% 18%;
+    --sidebar-foreground: 36 33% 97%;
+    --sidebar-primary: 42 80% 60%;
+    --sidebar-primary-foreground: 220 40% 12%;
+    --sidebar-accent: 36 33% 97%;
+    --sidebar-accent-foreground: 220 40% 12%;
+    --sidebar-border: 220 35% 25%;
+    --sidebar-ring: 42 80% 60%;
+  }
 }
 
 @layer base {
@@ -96,15 +135,15 @@
   }
   
   .btn-histoire-primary {
-    @apply btn-histoire bg-histoire-bordeaux text-white hover:bg-histoire-bordeaux/80;
+    @apply btn-histoire bg-histoire-bordeaux text-white hover:bg-histoire-bordeaux/80 dark:bg-histoire-or dark:text-gray-900 dark:hover:bg-histoire-or/80;
   }
   
   .btn-histoire-secondary {
-    @apply btn-histoire bg-histoire-bleu-royal text-white hover:bg-histoire-bleu-royal/80;
+    @apply btn-histoire bg-histoire-bleu-royal text-white hover:bg-histoire-bleu-royal/80 dark:bg-gray-700 dark:hover:bg-gray-600;
   }
 
   .btn-histoire-outline {
-    @apply btn-histoire border border-histoire-bordeaux text-histoire-bordeaux hover:bg-histoire-bordeaux/10;
+    @apply btn-histoire border border-histoire-bordeaux text-histoire-bordeaux hover:bg-histoire-bordeaux/10 dark:border-histoire-or dark:text-histoire-or dark:hover:bg-histoire-or/10;
   }
   
   .quiz-option {
@@ -112,19 +151,19 @@
   }
   
   .quiz-option-default {
-    @apply quiz-option border-gray-300 hover:border-histoire-bleu-royal;
+    @apply quiz-option border-gray-300 hover:border-histoire-bleu-royal dark:border-gray-600 dark:hover:border-histoire-or;
   }
   
   .quiz-option-selected {
-    @apply quiz-option border-histoire-bleu-royal bg-histoire-bleu-royal/10;
+    @apply quiz-option border-histoire-bleu-royal bg-histoire-bleu-royal/10 dark:border-histoire-or dark:bg-histoire-or/10;
   }
   
   .quiz-option-correct {
-    @apply quiz-option border-green-500 bg-green-50;
+    @apply quiz-option border-green-500 bg-green-50 dark:bg-green-900/20;
   }
   
   .quiz-option-incorrect {
-    @apply quiz-option border-red-500 bg-red-50;
+    @apply quiz-option border-red-500 bg-red-50 dark:bg-red-900/20;
   }
 
   .badge-histoire {
@@ -132,11 +171,11 @@
   }
   
   .badge-histoire-primary {
-    @apply badge-histoire bg-histoire-bordeaux text-white;
+    @apply badge-histoire bg-histoire-bordeaux text-white dark:bg-histoire-or dark:text-gray-900;
   }
   
   .badge-histoire-secondary {
-    @apply badge-histoire bg-histoire-bleu-royal text-white;
+    @apply badge-histoire bg-histoire-bleu-royal text-white dark:bg-gray-700 dark:text-white;
   }
   
   .badge-histoire-or {

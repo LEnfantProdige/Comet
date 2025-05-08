@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Question } from "../data/historyData";
 import { Button } from "@/components/ui/button";
 import { Check, X } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface QuizQuestionProps {
   question: Question;
@@ -12,6 +13,7 @@ interface QuizQuestionProps {
 const QuizQuestion = ({ question, onAnswer }: QuizQuestionProps) => {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
+  const { t } = useLanguage();
 
   const handleOptionClick = (option: string) => {
     if (isAnswered) return;
@@ -74,29 +76,29 @@ const QuizQuestion = ({ question, onAnswer }: QuizQuestionProps) => {
             className={getOptionClassName("true")}
             onClick={() => handleOptionClick("true")}
           >
-            Vrai
+            {t('true')}
           </button>
           <button
             className={getOptionClassName("false")}
             onClick={() => handleOptionClick("false")}
           >
-            Faux
+            {t('false')}
           </button>
         </div>
       )}
 
       {isAnswered ? (
         <div className="bg-muted p-4 rounded-lg mt-4">
-          <h4 className="font-medium mb-2">Explication</h4>
+          <h4 className="font-medium mb-2">{t('explanation')}</h4>
           <p className="text-sm">{question.explanation}</p>
         </div>
       ) : (
         <Button 
           onClick={handleSubmit} 
           disabled={!selectedAnswer}
-          className="mt-4 bg-histoire-bordeaux hover:bg-histoire-bordeaux/90 text-white"
+          className="mt-4 bg-histoire-bordeaux hover:bg-histoire-bordeaux/90 text-white dark:bg-histoire-or dark:text-gray-900 dark:hover:bg-histoire-or/90"
         >
-          Vérifier
+          {t('check')}
         </Button>
       )}
     </div>

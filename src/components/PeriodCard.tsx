@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { Period } from "../data/historyData";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface PeriodCardProps {
   period: Period;
@@ -9,6 +10,7 @@ interface PeriodCardProps {
 
 const PeriodCard = ({ period }: PeriodCardProps) => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   
   const handleClick = () => {
     navigate(`/period/${period.id}`);
@@ -33,13 +35,13 @@ const PeriodCard = ({ period }: PeriodCardProps) => {
         <p className="text-sm mb-4 flex-grow">{period.description}</p>
         <div className="flex justify-between items-center">
           <div className="text-xs font-medium text-muted-foreground">
-            {period.courses.length} cours
+            {period.courses.length} {t('courses')}
           </div>
           <Button 
             onClick={handleClick}
-            className="bg-histoire-bordeaux hover:bg-histoire-bordeaux/90 text-white"
+            className="bg-histoire-bordeaux hover:bg-histoire-bordeaux/90 text-white dark:bg-histoire-or dark:text-gray-900 dark:hover:bg-histoire-or/90"
           >
-            Explorer
+            {t('explore')}
           </Button>
         </div>
       </div>

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Course } from "../data/historyData";
 import { Button } from "@/components/ui/button";
 import { Clock } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface CourseCardProps {
   course: Course;
@@ -11,6 +12,7 @@ interface CourseCardProps {
 
 const CourseCard = ({ course, periodId }: CourseCardProps) => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const handleClick = () => {
     navigate(`/period/${periodId}/course/${course.id}`);
@@ -34,9 +36,9 @@ const CourseCard = ({ course, periodId }: CourseCardProps) => {
         <p className="text-sm mb-4">{course.description}</p>
         <Button 
           onClick={handleClick} 
-          className="w-full bg-histoire-bleu-royal hover:bg-histoire-bleu-royal/90 text-white"
+          className="w-full bg-histoire-bleu-royal hover:bg-histoire-bleu-royal/90 text-white dark:bg-histoire-or dark:text-gray-900 dark:hover:bg-histoire-or/90"
         >
-          Commencer
+          {t('start')}
         </Button>
       </div>
     </div>
