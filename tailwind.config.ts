@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,15 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Couleurs thématiques pour HistoVoyage
+				'histoire': {
+					'sepia': '#E6D7B9',
+					'parchemin': '#F3E9D9',
+					'bordeaux': '#8C1D32',
+					'bleu-royal': '#243C64',
+					'or': '#D4AF37',
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,12 +93,38 @@ export default {
 					to: {
 						height: '0'
 					}
-				}
+				},
+				'fade-in': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateY(10px)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateY(0)'
+					}
+				},
+				'fade-out': {
+					'0%': {
+						opacity: '1',
+						transform: 'translateY(0)'
+					},
+					'100%': {
+						opacity: '0',
+						transform: 'translateY(10px)'
+					}
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.5s ease-out',
+				'fade-out': 'fade-out 0.5s ease-out'
+			},
+			fontFamily: {
+				'serif': ['Playfair Display', 'Georgia', 'serif'],
+				'sans': ['Montserrat', 'system-ui', 'sans-serif'],
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
