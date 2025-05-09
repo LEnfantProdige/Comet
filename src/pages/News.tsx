@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useTheme } from "next-themes";
@@ -9,7 +8,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
-import { useMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Maximize, Minimize } from "lucide-react";
 
 interface NewsArticle {
   id: string;
@@ -25,8 +25,9 @@ const News = () => {
   const { t } = useLanguage();
   const { theme } = useTheme();
   const { toast } = useToast();
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
   const [openArticle, setOpenArticle] = useState<NewsArticle | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   
   const articles: NewsArticle[] = [
     {
@@ -84,13 +85,17 @@ const News = () => {
     });
   };
 
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
+  };
+
   // Render article dialog or drawer based on device
   const renderArticleDetail = () => {
     if (!openArticle) return null;
     
     const content = (
       <>
-        <div className="relative w-full h-48 md:h-64 overflow-hidden rounded-t-lg">
+        <div className={`relative ${isFullscreen ? 'h-[50vh]' : 'h-48 md:h-64'} overflow-hidden rounded-t-lg transition-all duration-300`}>
           <img 
             src={openArticle.image} 
             alt={openArticle.title}
@@ -101,9 +106,20 @@ const News = () => {
             <h2 className="text-2xl font-bold text-white">{openArticle.title}</h2>
             <p className="text-sm text-gray-300">{openArticle.date}</p>
           </div>
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleFullscreen();
+            }}
+            className="absolute top-2 right-2 bg-black/30 hover:bg-black/50 text-white rounded-full w-8 h-8 p-1"
+          >
+            {isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}
+          </Button>
         </div>
-        <div className="p-4">
-          <p className="text-gray-300 mb-4">{openArticle.content}</p>
+        <div className={`p-4 ${isFullscreen ? 'max-h-[70vh] overflow-y-auto' : ''}`}>
+          <p className={`text-gray-300 mb-4 ${isFullscreen ? 'text-lg' : ''}`}>{openArticle.content}</p>
           <div className="flex items-center justify-between mt-8 pt-4 border-t border-gray-700">
             <p className="text-xs text-gray-500">
               Source: {openArticle.source}
@@ -123,13 +139,16 @@ const News = () => {
     
     if (isMobile) {
       return (
-        <Drawer open={!!openArticle} onOpenChange={() => setOpenArticle(null)}>
-          <DrawerContent className="bg-black/90 border-t border-emerald-600/30 max-h-[85vh]">
-            <DrawerHeader>
+        <Drawer open={!!openArticle} onOpenChange={() => {
+          setOpenArticle(null);
+          setIsFullscreen(false);
+        }}>
+          <DrawerContent className={`bg-black/90 border-t border-emerald-600/30 ${isFullscreen ? 'max-h-screen h-screen' : 'max-h-[85vh]'}`}>
+            <DrawerHeader className={isFullscreen ? 'sr-only' : ''}>
               <DrawerTitle>{openArticle.title}</DrawerTitle>
               <DrawerDescription>{openArticle.date}</DrawerDescription>
             </DrawerHeader>
-            <ScrollArea className="max-h-[70vh] px-4">
+            <ScrollArea className={`${isFullscreen ? 'h-screen' : 'max-h-[70vh]'} px-4`}>
               {content}
             </ScrollArea>
           </DrawerContent>
@@ -138,13 +157,22 @@ const News = () => {
     }
     
     return (
-      <Dialog open={!!openArticle} onOpenChange={() => setOpenArticle(null)}>
-        <DialogContent className="bg-black/90 border border-emerald-600/30 max-w-2xl max-h-[85vh] overflow-hidden">
-          <DialogHeader>
+      <Dialog open={!!openArticle} onOpenChange={() => {
+        setOpenArticle(null);
+        setIsFullscreen(false);
+      }}>
+        <DialogContent 
+          className={`bg-black/90 border border-emerald-600/30 overflow-hidden transition-all duration-300 ${
+            isFullscreen 
+            ? 'max-w-full max-h-screen h-screen w-screen rounded-none fixed inset-0 m-0'
+            : 'max-w-2xl max-h-[85vh]'
+          }`}
+        >
+          <DialogHeader className={isFullscreen ? 'sr-only' : ''}>
             <DialogTitle>{openArticle.title}</DialogTitle>
             <DialogDescription>{openArticle.date}</DialogDescription>
           </DialogHeader>
-          <ScrollArea className="max-h-[70vh]">
+          <ScrollArea className={isFullscreen ? 'h-[calc(100vh-2rem)]' : 'max-h-[70vh]'}>
             {content}
           </ScrollArea>
         </DialogContent>
