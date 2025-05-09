@@ -1,0 +1,244 @@
+
+import React, { useState } from "react";
+import { useLanguage } from "@/hooks/useLanguage";
+import { useTheme } from "next-themes";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useToast } from "@/hooks/use-toast";
+import { useMobile } from "@/hooks/use-mobile";
+
+interface NewsArticle {
+  id: string;
+  title: string;
+  content: string;
+  image: string;
+  date: string;
+  category: string;
+  source: string;
+}
+
+const News = () => {
+  const { t } = useLanguage();
+  const { theme } = useTheme();
+  const { toast } = useToast();
+  const isMobile = useMobile();
+  const [openArticle, setOpenArticle] = useState<NewsArticle | null>(null);
+  
+  const articles: NewsArticle[] = [
+    {
+      id: "1",
+      title: "Nouvelle découverte sur Mars",
+      content: "Des scientifiques de la NASA ont découvert de nouvelles preuves suggérant la présence d'eau liquide sous la surface martienne, renforçant l'hypothèse d'une vie microbienne potentielle.",
+      image: "https://images.unsplash.com/photo-1614728894747-a83421789f10?auto=format&fit=crop&w=800",
+      date: "2025-05-01",
+      category: "space",
+      source: "Science Today"
+    },
+    {
+      id: "2",
+      title: "Avancée majeure en fusion nucléaire",
+      content: "Des chercheurs du MIT ont réalisé une percée significative dans le domaine de la fusion nucléaire, atteignant un rendement net positif pendant plusieurs minutes, ouvrant la voie à une nouvelle ère énergétique.",
+      image: "https://images.unsplash.com/photo-1580508244245-c466fefc9d60?auto=format&fit=crop&w=800",
+      date: "2025-04-28",
+      category: "energy",
+      source: "Tech Review"
+    },
+    {
+      id: "3",
+      title: "Nouveau vaccin contre la tuberculose",
+      content: "Une équipe internationale de médecins a développé un vaccin prometteur contre la tuberculose, montrant une efficacité de 89% lors des essais cliniques de phase 3.",
+      image: "https://images.unsplash.com/photo-1631549916768-4119b2e5f926?auto=format&fit=crop&w=800",
+      date: "2025-04-15",
+      category: "health",
+      source: "Medical Journal"
+    },
+    {
+      id: "4",
+      title: "Intelligence artificielle révolutionnant l'archéologie",
+      content: "Des archéologues utilisant des algorithmes d'IA ont découvert un réseau de cités mayas jusque-là inconnu en analysant des données LiDAR, révolutionnant notre compréhension de cette civilisation ancienne.",
+      image: "https://images.unsplash.com/photo-1588428608577-71d0290a3f50?auto=format&fit=crop&w=800",
+      date: "2025-04-10",
+      category: "archaeology",
+      source: "History Channel"
+    },
+    {
+      id: "5",
+      title: "Projet de reforestation massive en Amazonie",
+      content: "Une initiative internationale lance un ambitieux projet de reforestation en Amazonie, visant à planter plus de 100 millions d'arbres sur cinq ans pour lutter contre le changement climatique.",
+      image: "https://images.unsplash.com/photo-1586176930729-e0c48ae5a384?auto=format&fit=crop&w=800",
+      date: "2025-03-22",
+      category: "environment",
+      source: "Green Earth"
+    }
+  ];
+
+  const handleCiteSource = (source: string) => {
+    navigator.clipboard.writeText(`Source: ${source}`);
+    toast({
+      title: t('news.sourceCopied'),
+      description: source
+    });
+  };
+
+  // Render article dialog or drawer based on device
+  const renderArticleDetail = () => {
+    if (!openArticle) return null;
+    
+    const content = (
+      <>
+        <div className="relative w-full h-48 md:h-64 overflow-hidden rounded-t-lg">
+          <img 
+            src={openArticle.image} 
+            alt={openArticle.title}
+            className="w-full h-full object-cover" 
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+          <div className="absolute bottom-0 left-0 p-4">
+            <h2 className="text-2xl font-bold text-white">{openArticle.title}</h2>
+            <p className="text-sm text-gray-300">{openArticle.date}</p>
+          </div>
+        </div>
+        <div className="p-4">
+          <p className="text-gray-300 mb-4">{openArticle.content}</p>
+          <div className="flex items-center justify-between mt-8 pt-4 border-t border-gray-700">
+            <p className="text-xs text-gray-500">
+              Source: {openArticle.source}
+            </p>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => handleCiteSource(openArticle.source)}
+              className="text-emerald-400 border-emerald-600/30 text-xs"
+            >
+              {t('news.cite')}
+            </Button>
+          </div>
+        </div>
+      </>
+    );
+    
+    if (isMobile) {
+      return (
+        <Drawer open={!!openArticle} onOpenChange={() => setOpenArticle(null)}>
+          <DrawerContent className="bg-black/90 border-t border-emerald-600/30 max-h-[85vh]">
+            <DrawerHeader>
+              <DrawerTitle>{openArticle.title}</DrawerTitle>
+              <DrawerDescription>{openArticle.date}</DrawerDescription>
+            </DrawerHeader>
+            <ScrollArea className="max-h-[70vh] px-4">
+              {content}
+            </ScrollArea>
+          </DrawerContent>
+        </Drawer>
+      );
+    }
+    
+    return (
+      <Dialog open={!!openArticle} onOpenChange={() => setOpenArticle(null)}>
+        <DialogContent className="bg-black/90 border border-emerald-600/30 max-w-2xl max-h-[85vh] overflow-hidden">
+          <DialogHeader>
+            <DialogTitle>{openArticle.title}</DialogTitle>
+            <DialogDescription>{openArticle.date}</DialogDescription>
+          </DialogHeader>
+          <ScrollArea className="max-h-[70vh]">
+            {content}
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
+    );
+  };
+  
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-green-900 via-emerald-700 to-teal-700 py-12 px-4 md:px-8">
+      <div className="container mx-auto">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-lime-400 to-emerald-400 font-serif mb-3">
+            {t('news.title')}
+          </h1>
+          <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+            {t('news.subtitle')}
+          </p>
+        </div>
+        
+        <Tabs defaultValue="all" className="w-full">
+          <TabsList className="w-full bg-black/40 border border-emerald-600/30 mb-8">
+            <TabsTrigger value="all" className="flex-1 data-[state=active]:bg-emerald-900/70">
+              {t('news.categories.all')}
+            </TabsTrigger>
+            <TabsTrigger value="space" className="flex-1 data-[state=active]:bg-emerald-900/70">
+              {t('news.categories.space')}
+            </TabsTrigger>
+            <TabsTrigger value="health" className="flex-1 data-[state=active]:bg-emerald-900/70">
+              {t('news.categories.health')}
+            </TabsTrigger>
+            <TabsTrigger value="environment" className="flex-1 data-[state=active]:bg-emerald-900/70">
+              {t('news.categories.environment')}
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="all" className="animate-fade-in">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {articles.map((article) => (
+                <NewsCard key={article.id} article={article} onClick={() => setOpenArticle(article)} />
+              ))}
+            </div>
+          </TabsContent>
+          
+          {["space", "health", "environment"].map((category) => (
+            <TabsContent key={category} value={category} className="animate-fade-in">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {articles
+                  .filter(article => article.category === category)
+                  .map((article) => (
+                    <NewsCard key={article.id} article={article} onClick={() => setOpenArticle(article)} />
+                  ))}
+              </div>
+            </TabsContent>
+          ))}
+        </Tabs>
+      </div>
+      
+      {renderArticleDetail()}
+    </div>
+  );
+};
+
+// News Card Component
+interface NewsCardProps {
+  article: NewsArticle;
+  onClick: () => void;
+}
+
+const NewsCard = ({ article, onClick }: NewsCardProps) => {
+  return (
+    <Card 
+      className="border-2 border-emerald-600/50 backdrop-blur-sm bg-black/30 cursor-pointer hover:border-lime-500/50 transition-all duration-300 overflow-hidden"
+      onClick={onClick}
+    >
+      <div className="h-40 relative overflow-hidden">
+        <img 
+          src={article.image} 
+          alt={article.title}
+          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105" 
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+        <div className="absolute bottom-0 left-0 p-4">
+          <h3 className="text-lg font-bold text-white">{article.title}</h3>
+        </div>
+      </div>
+      <CardContent className="pt-4">
+        <p className="text-sm text-gray-300 line-clamp-2">{article.content}</p>
+      </CardContent>
+      <CardFooter className="flex justify-between">
+        <span className="text-xs text-gray-500">{article.date}</span>
+        <span className="text-xs text-emerald-400">{article.category}</span>
+      </CardFooter>
+    </Card>
+  );
+};
+
+export default News;

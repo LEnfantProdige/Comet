@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Atom, FlaskConical as Flask, TestTube, Microscope, Rocket } from "lucide-react";
+import { Atom, FlaskConical, TestTube, Microscope, Rocket } from "lucide-react";
 
 // Custom green-punk theme styles
 const greenPunkGradient = "bg-gradient-to-br from-green-900 via-emerald-700 to-teal-700";
@@ -84,7 +84,7 @@ const Science = () => {
         <Tabs defaultValue="articles" className="w-full max-w-5xl mx-auto">
           <TabsList className="w-full bg-black/40 border border-emerald-600/30 mb-8">
             <TabsTrigger value="articles" className="flex-1 data-[state=active]:bg-emerald-900/70">
-              <Flask className="mr-2 h-4 w-4" />
+              <FlaskConical className="mr-2 h-4 w-4" />
               {t('science.articles')}
             </TabsTrigger>
             <TabsTrigger value="quizzes" className="flex-1 data-[state=active]:bg-emerald-900/70">

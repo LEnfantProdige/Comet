@@ -12,7 +12,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle
 } from "@/components/ui/navigation-menu";
-import { Atom, BookOpen } from "lucide-react";
+import { Atom, BookOpen, User, Rocket } from "lucide-react";
 
 export default function Header() {
   const { t } = useLanguage();
@@ -56,6 +56,24 @@ export default function Header() {
                   {t('science')}
                 </NavigationMenuLink>
               </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink 
+                  className={navigationMenuTriggerStyle()} 
+                  onClick={() => navigate("/news")}
+                >
+                  <Rocket className="mr-2 h-4 w-4" />
+                  {t('news')}
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink 
+                  className={navigationMenuTriggerStyle()} 
+                  onClick={() => navigate("/account")}
+                >
+                  <User className="mr-2 h-4 w-4" />
+                  {t('account')}
+                </NavigationMenuLink>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </div>
@@ -66,4 +84,4 @@ export default function Header() {
       </div>
     </header>
   );
-}
+};

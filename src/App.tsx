@@ -11,6 +11,8 @@ import PeriodDetail from "./pages/PeriodDetail";
 import CourseDetail from "./pages/CourseDetail";
 import QuizPage from "./pages/QuizPage";
 import Science from "./pages/Science";
+import Account from "./pages/Account";
+import News from "./pages/News";
 import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
 
@@ -33,6 +35,8 @@ const App = () => (
                   <Route path="/period/:periodId/course/:courseId" element={<CourseDetail />} />
                   <Route path="/period/:periodId/course/:courseId/quiz" element={<QuizPage />} />
                   <Route path="/science" element={<Science />} />
+                  <Route path="/account" element={<Account />} />
+                  <Route path="/news" element={<News />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </div>
