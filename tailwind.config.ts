@@ -71,6 +71,14 @@ export default {
 					'bleu-royal': '#243C64',
 					'or': '#D4AF37',
 				},
+				// Thème vert-punk pour la section Science
+				'vert-punk': {
+					'dark': '#0B2815',
+					'medium': '#165327',
+					'light': '#39A869',
+					'accent': '#88F26B',
+					'neon': '#CCFF00',
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
