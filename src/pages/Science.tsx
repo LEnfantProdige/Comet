@@ -4,7 +4,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Atom, Flask, TestTube, Microscope, RocketIcon } from "lucide-react";
+import { Atom, FlaskConical as Flask, TestTube, Microscope, Rocket as RocketIcon } from "lucide-react";
 
 // Custom green-punk theme styles
 const greenPunkGradient = "bg-gradient-to-br from-green-900 via-emerald-700 to-teal-700";
@@ -12,6 +12,8 @@ const greenPunkAccent = "bg-gradient-to-r from-lime-500 to-emerald-500";
 const greenPunkCard = "border-2 border-emerald-600/50 backdrop-blur-sm bg-black/30";
 
 const ScienceArticleCard = ({ title, image, description }: { title: string, image: string, description: string }) => {
+  const { t } = useLanguage();
+  
   return (
     <Card className={`${greenPunkCard} group hover:border-lime-500/70 transition-all duration-300`}>
       <CardHeader className="p-0">
