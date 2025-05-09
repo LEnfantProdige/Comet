@@ -37,6 +37,8 @@ const translations: Record<Language, Record<string, string>> = {
     'science.deepsea': 'Exploration des Abysses',
     'science.infinitycraft': 'Infinity Craft',
     'science.comingsoon': 'Bientôt disponible',
+    'science.autopilot.start': 'Mode automatique',
+    'science.autopilot.stop': 'Arrêter',
   },
   en: {
     'app.title': 'HistoryJourney',
@@ -65,6 +67,8 @@ const translations: Record<Language, Record<string, string>> = {
     'science.deepsea': 'Deep Sea Exploration',
     'science.infinitycraft': 'Infinity Craft',
     'science.comingsoon': 'Coming Soon',
+    'science.autopilot.start': 'Auto Mode',
+    'science.autopilot.stop': 'Stop',
   },
   es: {
     'app.title': 'ViajeHistórico',
@@ -93,6 +97,8 @@ const translations: Record<Language, Record<string, string>> = {
     'science.deepsea': 'Exploración de las Profundidades',
     'science.infinitycraft': 'Infinity Craft',
     'science.comingsoon': 'Próximamente',
+    'science.autopilot.start': 'Modo automático',
+    'science.autopilot.stop': 'Detener',
   },
 };
 
