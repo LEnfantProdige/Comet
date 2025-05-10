@@ -10,7 +10,12 @@ import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, Dr
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Maximize, Minimize } from "lucide-react";
+import { Maximize, Minimize, Timer, Grid2X2, SquareX, Keyboard } from "lucide-react";
+import NewsGameCard from "@/components/news/NewsGameCard";
+import Sudoku from "@/components/news/games/Sudoku";
+import Connections from "@/components/news/games/Connections";
+import Crosswords from "@/components/news/games/Crosswords";
+import Wordle from "@/components/news/games/Wordle";
 
 interface NewsArticle {
   id: string;
@@ -22,6 +27,8 @@ interface NewsArticle {
   source: string;
 }
 
+type ActiveGameType = "sudoku" | "connections" | "crosswords" | "wordle" | null;
+
 const News = () => {
   const { t } = useLanguage();
   const { theme } = useTheme();
@@ -29,6 +36,7 @@ const News = () => {
   const isMobile = useIsMobile();
   const [openArticle, setOpenArticle] = useState<NewsArticle | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [activeGame, setActiveGame] = useState<ActiveGameType>(null);
   
   const articles: NewsArticle[] = [
     {
@@ -119,7 +127,7 @@ const News = () => {
             {isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}
           </Button>
         </div>
-        <div className={`p-6 ${isFullscreen ? 'overflow-y-auto' : ''}`}>
+        <div className={`p-6 ${isFullscreen ? 'overflow-y-auto bg-white dark:bg-gray-900' : ''}`}>
           <p className={`${isFullscreen ? 'text-lg leading-relaxed' : 'text-base'} text-gray-700 dark:text-gray-300`}>
             {openArticle.content}
           </p>
@@ -182,6 +190,24 @@ const News = () => {
       </Dialog>
     );
   };
+
+  // Render the active game
+  const renderActiveGame = () => {
+    if (!activeGame) return null;
+
+    switch (activeGame) {
+      case 'sudoku':
+        return <Sudoku onBackToNews={() => setActiveGame(null)} />;
+      case 'connections':
+        return <Connections onBackToNews={() => setActiveGame(null)} />;
+      case 'crosswords':
+        return <Crosswords onBackToNews={() => setActiveGame(null)} />;
+      case 'wordle':
+        return <Wordle onBackToNews={() => setActiveGame(null)} />;
+      default:
+        return null;
+    }
+  };
   
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 py-12 px-4 md:px-8">
@@ -195,42 +221,81 @@ const News = () => {
           </p>
         </div>
         
-        <Tabs defaultValue="all" className="w-full">
-          <TabsList className="w-full bg-gray-100 dark:bg-gray-800 mb-8">
-            <TabsTrigger value="all" className="flex-1">
-              {t('news.categories.all')}
-            </TabsTrigger>
-            <TabsTrigger value="space" className="flex-1">
-              {t('news.categories.space')}
-            </TabsTrigger>
-            <TabsTrigger value="health" className="flex-1">
-              {t('news.categories.health')}
-            </TabsTrigger>
-            <TabsTrigger value="environment" className="flex-1">
-              {t('news.categories.environment')}
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="all" className="animate-fade-in">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {articles.map((article) => (
-                <NewsCard key={article.id} article={article} onClick={() => setOpenArticle(article)} />
-              ))}
-            </div>
-          </TabsContent>
-          
-          {["space", "health", "environment"].map((category) => (
-            <TabsContent key={category} value={category} className="animate-fade-in">
+        {activeGame ? (
+          renderActiveGame()
+        ) : (
+          <Tabs defaultValue="all" className="w-full">
+            <TabsList className="w-full bg-gray-100 dark:bg-gray-800 mb-8">
+              <TabsTrigger value="all" className="flex-1">
+                {t('news.categories.all')}
+              </TabsTrigger>
+              <TabsTrigger value="space" className="flex-1">
+                {t('news.categories.space')}
+              </TabsTrigger>
+              <TabsTrigger value="health" className="flex-1">
+                {t('news.categories.health')}
+              </TabsTrigger>
+              <TabsTrigger value="environment" className="flex-1">
+                {t('news.categories.environment')}
+              </TabsTrigger>
+              <TabsTrigger value="games" className="flex-1">
+                {t('news.categories.games')}
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="all" className="animate-fade-in">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {articles
-                  .filter(article => article.category === category)
-                  .map((article) => (
-                    <NewsCard key={article.id} article={article} onClick={() => setOpenArticle(article)} />
-                  ))}
+                {articles.map((article) => (
+                  <NewsCard key={article.id} article={article} onClick={() => setOpenArticle(article)} />
+                ))}
               </div>
             </TabsContent>
-          ))}
-        </Tabs>
+            
+            {["space", "health", "environment"].map((category) => (
+              <TabsContent key={category} value={category} className="animate-fade-in">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {articles
+                    .filter(article => article.category === category)
+                    .map((article) => (
+                      <NewsCard key={article.id} article={article} onClick={() => setOpenArticle(article)} />
+                    ))}
+                </div>
+              </TabsContent>
+            ))}
+            
+            {/* Games Tab */}
+            <TabsContent value="games" className="animate-fade-in">
+              <div className="max-w-4xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <NewsGameCard 
+                    title={t('games.sudoku')}
+                    description={t('games.sudoku.description')}
+                    icon={<Grid2X2 size={32} />}
+                    onClick={() => setActiveGame("sudoku")}
+                  />
+                  <NewsGameCard 
+                    title={t('games.connections')}
+                    description={t('games.connections.description')}
+                    icon={<Timer size={32} />}
+                    onClick={() => setActiveGame("connections")}
+                  />
+                  <NewsGameCard 
+                    title={t('games.wordle')}
+                    description={t('games.wordle.description')}
+                    icon={<Keyboard size={32} />}
+                    onClick={() => setActiveGame("wordle")}
+                  />
+                  <NewsGameCard 
+                    title={t('games.crosswords')}
+                    description={t('games.crosswords.description')}
+                    icon={<SquareX size={32} />}
+                    onClick={() => setActiveGame("crosswords")}
+                  />
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        )}
       </div>
       
       {renderArticleDetail()}
