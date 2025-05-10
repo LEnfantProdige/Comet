@@ -1,7 +1,8 @@
+
 import React, { useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useTheme } from "next-themes";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -95,7 +96,7 @@ const News = () => {
     
     const content = (
       <>
-        <div className={`relative ${isFullscreen ? 'h-[50vh]' : 'h-48 md:h-64'} overflow-hidden rounded-t-lg transition-all duration-300`}>
+        <div className={`relative ${isFullscreen ? 'h-[40vh]' : 'h-48 md:h-64'} overflow-hidden rounded-t-lg transition-all duration-300`}>
           <img 
             src={openArticle.image} 
             alt={openArticle.title}
@@ -118,17 +119,19 @@ const News = () => {
             {isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}
           </Button>
         </div>
-        <div className={`p-4 ${isFullscreen ? 'max-h-[70vh] overflow-y-auto' : ''}`}>
-          <p className={`text-gray-300 mb-4 ${isFullscreen ? 'text-lg' : ''}`}>{openArticle.content}</p>
-          <div className="flex items-center justify-between mt-8 pt-4 border-t border-gray-700">
-            <p className="text-xs text-gray-500">
+        <div className={`p-6 ${isFullscreen ? 'overflow-y-auto' : ''}`}>
+          <p className={`${isFullscreen ? 'text-lg leading-relaxed' : 'text-base'} text-gray-700 dark:text-gray-300`}>
+            {openArticle.content}
+          </p>
+          <div className="flex items-center justify-between mt-8 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <p className="text-sm text-gray-500">
               Source: {openArticle.source}
             </p>
             <Button 
               variant="outline" 
               size="sm" 
               onClick={() => handleCiteSource(openArticle.source)}
-              className="text-emerald-400 border-emerald-600/30 text-xs"
+              className="text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800/30 text-xs"
             >
               {t('news.cite')}
             </Button>
@@ -143,7 +146,7 @@ const News = () => {
           setOpenArticle(null);
           setIsFullscreen(false);
         }}>
-          <DrawerContent className={`bg-black/90 border-t border-emerald-600/30 ${isFullscreen ? 'max-h-screen h-screen' : 'max-h-[85vh]'}`}>
+          <DrawerContent className={`bg-white dark:bg-gray-900 border-t ${isFullscreen ? 'max-h-screen h-screen' : 'max-h-[85vh]'}`}>
             <DrawerHeader className={isFullscreen ? 'sr-only' : ''}>
               <DrawerTitle>{openArticle.title}</DrawerTitle>
               <DrawerDescription>{openArticle.date}</DrawerDescription>
@@ -162,7 +165,7 @@ const News = () => {
         setIsFullscreen(false);
       }}>
         <DialogContent 
-          className={`bg-black/90 border border-emerald-600/30 overflow-hidden transition-all duration-300 ${
+          className={`bg-white dark:bg-gray-900 overflow-hidden transition-all duration-300 ${
             isFullscreen 
             ? 'max-w-full max-h-screen h-screen w-screen rounded-none fixed inset-0 m-0'
             : 'max-w-2xl max-h-[85vh]'
@@ -181,29 +184,29 @@ const News = () => {
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-900 via-emerald-700 to-teal-700 py-12 px-4 md:px-8">
+    <div className="min-h-screen bg-white dark:bg-gray-900 py-12 px-4 md:px-8">
       <div className="container mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-lime-400 to-emerald-400 font-serif mb-3">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white font-serif mb-3">
             {t('news.title')}
           </h1>
-          <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
             {t('news.subtitle')}
           </p>
         </div>
         
         <Tabs defaultValue="all" className="w-full">
-          <TabsList className="w-full bg-black/40 border border-emerald-600/30 mb-8">
-            <TabsTrigger value="all" className="flex-1 data-[state=active]:bg-emerald-900/70">
+          <TabsList className="w-full bg-gray-100 dark:bg-gray-800 mb-8">
+            <TabsTrigger value="all" className="flex-1">
               {t('news.categories.all')}
             </TabsTrigger>
-            <TabsTrigger value="space" className="flex-1 data-[state=active]:bg-emerald-900/70">
+            <TabsTrigger value="space" className="flex-1">
               {t('news.categories.space')}
             </TabsTrigger>
-            <TabsTrigger value="health" className="flex-1 data-[state=active]:bg-emerald-900/70">
+            <TabsTrigger value="health" className="flex-1">
               {t('news.categories.health')}
             </TabsTrigger>
-            <TabsTrigger value="environment" className="flex-1 data-[state=active]:bg-emerald-900/70">
+            <TabsTrigger value="environment" className="flex-1">
               {t('news.categories.environment')}
             </TabsTrigger>
           </TabsList>
@@ -244,7 +247,7 @@ interface NewsCardProps {
 const NewsCard = ({ article, onClick }: NewsCardProps) => {
   return (
     <Card 
-      className="border-2 border-emerald-600/50 backdrop-blur-sm bg-black/30 cursor-pointer hover:border-lime-500/50 transition-all duration-300 overflow-hidden"
+      className="border bg-white dark:bg-gray-800 cursor-pointer hover:shadow-md transition-all duration-300 overflow-hidden"
       onClick={onClick}
     >
       <div className="h-40 relative overflow-hidden">
@@ -259,11 +262,11 @@ const NewsCard = ({ article, onClick }: NewsCardProps) => {
         </div>
       </div>
       <CardContent className="pt-4">
-        <p className="text-sm text-gray-300 line-clamp-2">{article.content}</p>
+        <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">{article.content}</p>
       </CardContent>
       <CardFooter className="flex justify-between">
         <span className="text-xs text-gray-500">{article.date}</span>
-        <span className="text-xs text-emerald-400">{article.category}</span>
+        <span className="text-xs text-blue-600 dark:text-blue-400">{article.category}</span>
       </CardFooter>
     </Card>
   );
