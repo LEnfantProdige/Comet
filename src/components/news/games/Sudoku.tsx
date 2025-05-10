@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLanguage } from '@/hooks/useLanguage';
@@ -156,6 +156,8 @@ interface SudokuProps {
 const Sudoku = ({ onBackToNews }: SudokuProps) => {
   const { t } = useLanguage();
   const { toast } = useToast();
+  const gameContainerRef = useRef<HTMLDivElement>(null);
+  
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('easy');
   const [board, setBoard] = useState<SudokuBoard>([]);
   const [initialBoard, setInitialBoard] = useState<SudokuBoard>([]);
@@ -183,6 +185,72 @@ const Sudoku = ({ onBackToNews }: SudokuProps) => {
       clearInterval(interval);
     };
   }, [isRunning]);
+
+  // Add keyboard navigation and input
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!selectedCell) return;
+
+      const [row, col] = selectedCell;
+      
+      // Only allow input if the cell is not in the initial board
+      if (initialBoard[row][col] === null) {
+        // Number keys (both main keyboard and numpad)
+        if ((/^[1-9]$/.test(e.key) || (e.key >= 'Numpad1' && e.key <= 'Numpad9'))) {
+          e.preventDefault();
+          const num = parseInt(e.key.replace('Numpad', ''), 10);
+          handleNumberInput(num);
+        } 
+        // Delete or Backspace to clear cell
+        else if (e.key === 'Delete' || e.key === 'Backspace') {
+          e.preventDefault();
+          const newBoard = [...board];
+          newBoard[row][col] = null;
+          setBoard(newBoard);
+        }
+      }
+
+      // Arrow keys for navigation
+      if (e.key.startsWith('Arrow')) {
+        e.preventDefault();
+        const [currentRow, currentCol] = selectedCell;
+        let newRow = currentRow;
+        let newCol = currentCol;
+
+        switch (e.key) {
+          case 'ArrowUp':
+            newRow = Math.max(0, currentRow - 1);
+            break;
+          case 'ArrowDown':
+            newRow = Math.min(8, currentRow + 1);
+            break;
+          case 'ArrowLeft':
+            newCol = Math.max(0, currentCol - 1);
+            break;
+          case 'ArrowRight':
+            newCol = Math.min(8, currentCol + 1);
+            break;
+        }
+
+        setSelectedCell([newRow, newCol]);
+      }
+    };
+
+    if (gameContainerRef.current) {
+      gameContainerRef.current.addEventListener('keydown', handleKeyDown);
+    }
+
+    // Ensure focus when a cell is selected
+    if (selectedCell && gameContainerRef.current) {
+      gameContainerRef.current.focus();
+    }
+
+    return () => {
+      if (gameContainerRef.current) {
+        gameContainerRef.current.removeEventListener('keydown', handleKeyDown);
+      }
+    };
+  }, [selectedCell, board, initialBoard]);
   
   const startNewGame = () => {
     const { puzzle, solution } = generateSudoku(difficulty);
@@ -191,12 +259,11 @@ const Sudoku = ({ onBackToNews }: SudokuProps) => {
     setSolution(solution);
     setTimer(0);
     setIsRunning(true);
+    setSelectedCell(null);
   };
   
   const handleCellClick = (row: number, col: number) => {
-    if (initialBoard[row][col] === null) {
-      setSelectedCell([row, col]);
-    }
+    setSelectedCell([row, col]);
   };
   
   const handleNumberInput = (num: number) => {
@@ -242,6 +309,7 @@ const Sudoku = ({ onBackToNews }: SudokuProps) => {
   
   const handleReset = () => {
     setBoard(JSON.parse(JSON.stringify(initialBoard)));
+    setSelectedCell(null);
   };
 
   const formatTime = (seconds: number): string => {
@@ -251,7 +319,11 @@ const Sudoku = ({ onBackToNews }: SudokuProps) => {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto p-4 bg-white dark:bg-gray-900">
+    <div 
+      className="w-full max-w-3xl mx-auto p-4 bg-white dark:bg-gray-900"
+      ref={gameContainerRef}
+      tabIndex={0} // Make container focusable
+    >
       <div className="flex justify-between items-center mb-6">
         <Button 
           onClick={onBackToNews}
@@ -306,13 +378,21 @@ const Sudoku = ({ onBackToNews }: SudokuProps) => {
                   ${rowIndex === 8 && 'border-b-2 border-b-gray-400 dark:border-b-gray-600'}
                   ${colIndex === 8 && 'border-r-2 border-r-gray-400 dark:border-r-gray-600'}
                   ${selectedCell && selectedCell[0] === rowIndex && selectedCell[1] === colIndex 
-                    ? 'bg-blue-100 dark:bg-blue-900/30' 
+                    ? 'bg-blue-100 dark:bg-blue-900/30 ring-2 ring-blue-500 dark:ring-blue-400' 
                     : initialBoard[rowIndex][colIndex] !== null 
                       ? 'bg-gray-200 dark:bg-gray-700' 
                       : 'bg-white dark:bg-gray-900 hover:bg-blue-50 dark:hover:bg-blue-900/20'
                   }
                 `}
                 onClick={() => handleCellClick(rowIndex, colIndex)}
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  // Handle Enter key to focus the cell
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleCellClick(rowIndex, colIndex);
+                  }
+                }}
               >
                 {cell || ''}
               </div>
@@ -329,7 +409,7 @@ const Sudoku = ({ onBackToNews }: SudokuProps) => {
               variant="outline"
               className="h-12 text-xl font-medium"
               onClick={() => handleNumberInput(num)}
-              disabled={!selectedCell}
+              disabled={!selectedCell || (selectedCell && initialBoard[selectedCell[0]][selectedCell[1]] !== null)}
             >
               {num}
             </Button>
@@ -340,12 +420,14 @@ const Sudoku = ({ onBackToNews }: SudokuProps) => {
             onClick={() => {
               if (selectedCell) {
                 const [row, col] = selectedCell;
-                const newBoard = [...board];
-                newBoard[row][col] = null;
-                setBoard(newBoard);
+                if (initialBoard[row][col] === null) {
+                  const newBoard = [...board];
+                  newBoard[row][col] = null;
+                  setBoard(newBoard);
+                }
               }
             }}
-            disabled={!selectedCell}
+            disabled={!selectedCell || (selectedCell && initialBoard[selectedCell[0]][selectedCell[1]] !== null)}
           >
             <SquareX size={20} />
           </Button>

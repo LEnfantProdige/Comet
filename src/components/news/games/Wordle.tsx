@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { useLanguage } from '@/hooks/useLanguage';
 import { useToast } from '@/hooks/use-toast';
@@ -24,6 +24,7 @@ type CellState = 'empty' | 'filled' | 'correct' | 'present' | 'absent';
 const Wordle = ({ onBackToNews }: WordleProps) => {
   const { t, language } = useLanguage();
   const { toast } = useToast();
+  const gameContainerRef = useRef<HTMLDivElement>(null);
   
   const [targetWord, setTargetWord] = useState<string>('');
   const [attempts, setAttempts] = useState<string[]>(Array(MAX_ATTEMPTS).fill(''));
@@ -37,6 +38,33 @@ const Wordle = ({ onBackToNews }: WordleProps) => {
   useEffect(() => {
     startNewGame();
   }, [language]);
+
+  // Focus the game container for keyboard input
+  useEffect(() => {
+    if (gameState === 'playing' && gameContainerRef.current) {
+      gameContainerRef.current.focus();
+    }
+  }, [gameState, gameContainerRef]);
+
+  // Handle physical keyboard events
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if (gameState !== 'playing') return;
+      
+      const key = e.key.toUpperCase();
+      
+      if (key === 'BACKSPACE') {
+        handleKeyInput('BACKSPACE');
+      } else if (key === 'ENTER') {
+        handleKeyInput('ENTER');
+      } else if (/^[A-Z]$/.test(key)) {
+        handleKeyInput(key);
+      }
+    };
+
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, [gameState, attempts, currentAttempt]);
 
   const startNewGame = () => {
     // Choose language-appropriate words based on current language
@@ -155,7 +183,15 @@ const Wordle = ({ onBackToNews }: WordleProps) => {
   };
   
   return (
-    <div className="w-full max-w-md mx-auto p-4 bg-white dark:bg-gray-900">
+    <div 
+      className="w-full max-w-md mx-auto p-4 bg-white dark:bg-gray-900"
+      ref={gameContainerRef}
+      tabIndex={0} // Make sure the container is focusable
+      onKeyDown={(e) => {
+        // This is for accessibility, the main keyboard handling is in the useEffect
+        e.stopPropagation();
+      }}
+    >
       <div className="flex justify-between items-center mb-6">
         <Button 
           onClick={onBackToNews}

@@ -19,6 +19,14 @@ const NewsGameCard = ({ title, icon, description, comingSoon = false, onClick }:
     <Card 
       className="border bg-white dark:bg-gray-800 hover:shadow-md transition-all duration-300 overflow-hidden cursor-pointer"
       onClick={!comingSoon ? onClick : undefined}
+      tabIndex={!comingSoon ? 0 : undefined}
+      onKeyDown={!comingSoon ? (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick && onClick();
+        }
+      } : undefined}
+      aria-disabled={comingSoon}
     >
       <div className="h-28 relative bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 flex items-center justify-center">
         <div className="text-4xl text-blue-600 dark:text-blue-400">

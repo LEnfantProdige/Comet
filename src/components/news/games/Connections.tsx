@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { useLanguage } from '@/hooks/useLanguage';
 import { useToast } from '@/hooks/use-toast';
@@ -67,6 +67,7 @@ const ALTERNATE_CONNECTIONS_DATA = [
 const Connections = ({ onBackToNews }: ConnectionsProps) => {
   const { t } = useLanguage();
   const { toast } = useToast();
+  const gameContainerRef = useRef<HTMLDivElement>(null);
   
   const [categories, setCategories] = useState<Category[]>([]);
   const [words, setWords] = useState<string[]>([]);
@@ -74,6 +75,7 @@ const Connections = ({ onBackToNews }: ConnectionsProps) => {
   const [foundCategories, setFoundCategories] = useState<Category[]>([]);
   const [mistakes, setMistakes] = useState<number>(0);
   const [timer, setTimer] = useState<number>(0);
+  const [focusedWordIndex, setFocusedWordIndex] = useState<number | null>(null);
   
   // Initialize the game
   useEffect(() => {
@@ -84,7 +86,64 @@ const Connections = ({ onBackToNews }: ConnectionsProps) => {
     
     return () => clearInterval(interval);
   }, []);
-  
+
+  // Add keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (words.length === 0) return;
+
+      // Handle keyboard navigation with arrow keys
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        setFocusedWordIndex(prev => {
+          if (prev === null) return 0;
+          return (prev + 1) % words.length;
+        });
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        setFocusedWordIndex(prev => {
+          if (prev === null) return words.length - 1;
+          return (prev - 1 + words.length) % words.length;
+        });
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        const cols = 4; // Number of columns in the grid
+        setFocusedWordIndex(prev => {
+          if (prev === null) return e.key === 'ArrowDown' ? 0 : words.length - 1;
+          const newIndex = prev + (e.key === 'ArrowDown' ? cols : -cols);
+          if (newIndex >= 0 && newIndex < words.length) return newIndex;
+          return prev;
+        });
+      } else if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (focusedWordIndex !== null) {
+          toggleWordSelection(words[focusedWordIndex]);
+        }
+      } else if (e.key === 'Tab' && e.shiftKey) {
+        e.preventDefault();
+        if (focusedWordIndex !== null) {
+          setFocusedWordIndex(null);
+          if (selectedWords.length === 4) {
+            const submitButton = document.querySelector('button[data-submit="true"]');
+            if (submitButton instanceof HTMLButtonElement) {
+              submitButton.focus();
+            }
+          }
+        }
+      }
+    };
+
+    if (gameContainerRef.current) {
+      gameContainerRef.current.addEventListener('keydown', handleKeyDown as any);
+    }
+
+    return () => {
+      if (gameContainerRef.current) {
+        gameContainerRef.current.removeEventListener('keydown', handleKeyDown as any);
+      }
+    };
+  }, [words, focusedWordIndex, selectedWords]);
+
   const startNewGame = () => {
     // Randomly choose between the two sets of connections
     const connectionData = Math.random() > 0.5 ? CONNECTIONS_DATA : ALTERNATE_CONNECTIONS_DATA;
@@ -98,6 +157,7 @@ const Connections = ({ onBackToNews }: ConnectionsProps) => {
     setFoundCategories([]);
     setMistakes(0);
     setTimer(0);
+    setFocusedWordIndex(null);
   };
   
   const shuffleArray = (array: string[]): string[] => {
@@ -132,6 +192,7 @@ const Connections = ({ onBackToNews }: ConnectionsProps) => {
         setFoundCategories([...foundCategories, category]);
         setWords(words.filter(word => !selectedWords.includes(word)));
         setSelectedWords([]);
+        setFocusedWordIndex(null);
         
         toast({
           title: t('games.connections.correct'),
@@ -177,7 +238,11 @@ const Connections = ({ onBackToNews }: ConnectionsProps) => {
   };
   
   return (
-    <div className="w-full max-w-2xl mx-auto p-4 bg-white dark:bg-gray-900">
+    <div 
+      className="w-full max-w-2xl mx-auto p-4 bg-white dark:bg-gray-900"
+      ref={gameContainerRef}
+      tabIndex={0} // Make container focusable
+    >
       <div className="flex justify-between items-center mb-6">
         <Button 
           onClick={onBackToNews}
@@ -237,12 +302,15 @@ const Connections = ({ onBackToNews }: ConnectionsProps) => {
           {words.map((word, index) => (
             <button
               key={index}
-              className={`py-4 text-center border rounded-md transition
+              className={`py-4 text-center border rounded-md transition outline-offset-2
                 ${selectedWords.includes(word) 
                   ? 'bg-blue-100 dark:bg-blue-900/40 border-blue-400 dark:border-blue-600'
                   : 'bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700'}
+                ${focusedWordIndex === index ? 'ring-2 ring-blue-500 dark:ring-blue-400' : ''}
               `}
               onClick={() => toggleWordSelection(word)}
+              onFocus={() => setFocusedWordIndex(index)}
+              tabIndex={0}
             >
               {word}
             </button>
@@ -256,6 +324,7 @@ const Connections = ({ onBackToNews }: ConnectionsProps) => {
           className="w-full mt-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800"
           disabled={selectedWords.length !== 4}
           onClick={checkSelection}
+          data-submit="true"
         >
           {t('games.connections.submit')}
         </Button>

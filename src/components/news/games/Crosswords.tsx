@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { useLanguage } from '@/hooks/useLanguage';
 import { useToast } from '@/hooks/use-toast';
@@ -109,6 +108,7 @@ const PUZZLES = {
 const Crosswords = ({ onBackToNews }: CrosswordsProps) => {
   const { t, language } = useLanguage();
   const { toast } = useToast();
+  const gameContainerRef = useRef<HTMLDivElement>(null);
   
   const [grid, setGrid] = useState<Cell[][]>([]);
   const [acrossClues, setAcrossClues] = useState<Clue[]>([]);
@@ -116,6 +116,7 @@ const Crosswords = ({ onBackToNews }: CrosswordsProps) => {
   const [selectedCell, setSelectedCell] = useState<[number, number] | null>(null);
   const [direction, setDirection] = useState<'across' | 'down'>('across');
   const [isComplete, setIsComplete] = useState(false);
+  const [selectedClue, setSelectedClue] = useState<Clue | null>(null);
   
   // Initialize the puzzle
   useEffect(() => {
@@ -218,6 +219,132 @@ const Crosswords = ({ onBackToNews }: CrosswordsProps) => {
     setSelectedCell(null);
   };
   
+  // Handle keyboard input for the crossword
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!selectedCell || isComplete) return;
+
+      const [row, col] = selectedCell;
+      if (grid[row][col].correctLetter === '#') return;
+
+      if (/^[A-Za-z]$/.test(e.key)) {
+        // Enter letter
+        e.preventDefault();
+        
+        const newGrid = [...grid];
+        newGrid[row][col].letter = e.key.toUpperCase();
+        setGrid(newGrid);
+        
+        // Move to next cell
+        moveToNextCell();
+        
+        // Check if puzzle is complete
+        checkPuzzleComplete();
+      } else if (e.key === 'Backspace' || e.key === 'Delete') {
+        e.preventDefault();
+        
+        // Clear current cell and move back if backspace
+        const newGrid = [...grid];
+        
+        if (newGrid[row][col].letter === '') {
+          // If cell is already empty, move to previous cell
+          moveToPrevCell();
+        } else {
+          // Otherwise just clear the current cell
+          newGrid[row][col].letter = '';
+          setGrid(newGrid);
+        }
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        setDirection('across');
+        moveSelectedCell(0, 1);
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        setDirection('across');
+        moveSelectedCell(0, -1);
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setDirection('down');
+        moveSelectedCell(1, 0);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setDirection('down');
+        moveSelectedCell(-1, 0);
+      } else if (e.key === 'Tab') {
+        e.preventDefault();
+        // Tab to next clue
+        if (direction === 'across') {
+          const currentClueIndex = acrossClues.findIndex(
+            c => c.startRow === row && col >= c.startCol && col < c.startCol + c.answer.length
+          );
+          
+          if (currentClueIndex !== -1) {
+            const nextClueIndex = e.shiftKey ? 
+              (currentClueIndex - 1 + acrossClues.length) % acrossClues.length : 
+              (currentClueIndex + 1) % acrossClues.length;
+            
+            const nextClue = acrossClues[nextClueIndex];
+            setSelectedCell([nextClue.startRow, nextClue.startCol]);
+            setSelectedClue(nextClue);
+          }
+        } else {
+          const currentClueIndex = downClues.findIndex(
+            c => c.startCol === col && row >= c.startRow && row < c.startRow + c.answer.length
+          );
+          
+          if (currentClueIndex !== -1) {
+            const nextClueIndex = e.shiftKey ? 
+              (currentClueIndex - 1 + downClues.length) % downClues.length : 
+              (currentClueIndex + 1) % downClues.length;
+            
+            const nextClue = downClues[nextClueIndex];
+            setSelectedCell([nextClue.startRow, nextClue.startCol]);
+            setSelectedClue(nextClue);
+          }
+        }
+      } else if (e.key === ' ') {
+        e.preventDefault();
+        // Toggle direction
+        setDirection(direction === 'across' ? 'down' : 'across');
+      }
+    };
+
+    // Add event listener to the container
+    if (gameContainerRef.current) {
+      gameContainerRef.current.addEventListener('keydown', handleKeyDown);
+    }
+
+    // Focus the container when a cell is selected
+    if (selectedCell && gameContainerRef.current) {
+      gameContainerRef.current.focus();
+    }
+
+    return () => {
+      if (gameContainerRef.current) {
+        gameContainerRef.current.removeEventListener('keydown', handleKeyDown);
+      }
+    };
+  }, [selectedCell, grid, direction, acrossClues, downClues, isComplete]);
+  
+  // Update selected clue when cell or direction changes
+  useEffect(() => {
+    if (selectedCell) {
+      const [row, col] = selectedCell;
+      
+      if (direction === 'across') {
+        const clue = acrossClues.find(
+          c => c.startRow === row && col >= c.startCol && col < c.startCol + c.answer.length
+        );
+        setSelectedClue(clue || null);
+      } else {
+        const clue = downClues.find(
+          c => c.startCol === col && row >= c.startRow && row < c.startRow + c.answer.length
+        );
+        setSelectedClue(clue || null);
+      }
+    }
+  }, [selectedCell, direction, acrossClues, downClues]);
+  
   const handleCellClick = (row: number, col: number) => {
     if (grid[row][col].correctLetter === '#') return;
     
@@ -226,43 +353,6 @@ const Crosswords = ({ onBackToNews }: CrosswordsProps) => {
       setDirection(direction === 'across' ? 'down' : 'across');
     } else {
       setSelectedCell([row, col]);
-    }
-  };
-  
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!selectedCell) return;
-    
-    const [row, col] = selectedCell;
-    
-    if (/^[A-Za-z]$/.test(e.key)) {
-      // Enter letter
-      const newGrid = [...grid];
-      newGrid[row][col].letter = e.key.toUpperCase();
-      setGrid(newGrid);
-      
-      // Move to next cell
-      moveToNextCell();
-      
-      // Check if puzzle is complete
-      checkPuzzleComplete();
-    } else if (e.key === 'Backspace') {
-      // Clear current cell and move back
-      const newGrid = [...grid];
-      newGrid[row][col].letter = '';
-      setGrid(newGrid);
-      moveToPrevCell();
-    } else if (e.key === 'ArrowRight') {
-      setDirection('across');
-      moveSelectedCell(0, 1);
-    } else if (e.key === 'ArrowLeft') {
-      setDirection('across');
-      moveSelectedCell(0, -1);
-    } else if (e.key === 'ArrowDown') {
-      setDirection('down');
-      moveSelectedCell(1, 0);
-    } else if (e.key === 'ArrowUp') {
-      setDirection('down');
-      moveSelectedCell(-1, 0);
     }
   };
   
@@ -395,13 +485,7 @@ const Crosswords = ({ onBackToNews }: CrosswordsProps) => {
           <div 
             key={clue.number}
             className={`text-sm p-2 rounded cursor-pointer
-              ${selectedCell && 
-                ((direction === 'across' && clue.direction === 'across' && 
-                  selectedCell[0] === clue.startRow && selectedCell[1] >= clue.startCol && 
-                  selectedCell[1] < clue.startCol + clue.answer.length) ||
-                (direction === 'down' && clue.direction === 'down' && 
-                  selectedCell[1] === clue.startCol && selectedCell[0] >= clue.startRow && 
-                  selectedCell[0] < clue.startRow + clue.answer.length))
+              ${selectedClue && selectedClue.number === clue.number && selectedClue.direction === clue.direction
                 ? 'bg-blue-100 dark:bg-blue-900/20 font-medium'
                 : ''
               }
@@ -409,6 +493,16 @@ const Crosswords = ({ onBackToNews }: CrosswordsProps) => {
             onClick={() => {
               setDirection(clue.direction);
               setSelectedCell([clue.startRow, clue.startCol]);
+              setSelectedClue(clue);
+            }}
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setDirection(clue.direction);
+                setSelectedCell([clue.startRow, clue.startCol]);
+                setSelectedClue(clue);
+              }
             }}
           >
             <span className="font-medium">{clue.number}.</span> {clue.text}
@@ -419,7 +513,11 @@ const Crosswords = ({ onBackToNews }: CrosswordsProps) => {
   );
   
   return (
-    <div className="w-full max-w-3xl mx-auto p-4 bg-white dark:bg-gray-900">
+    <div 
+      className="w-full max-w-3xl mx-auto p-4 bg-white dark:bg-gray-900"
+      ref={gameContainerRef}
+      tabIndex={0}
+    >
       <div className="flex justify-between items-center mb-6">
         <Button onClick={onBackToNews} variant="outline" className="text-sm">
           {t('games.back')}
@@ -433,14 +531,18 @@ const Crosswords = ({ onBackToNews }: CrosswordsProps) => {
         </Button>
       </div>
       
+      {selectedClue && (
+        <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/10 rounded-md">
+          <p className="font-medium">
+            {selectedClue.number}. {selectedClue.text} ({t(`games.crosswords.${selectedClue.direction}`)})
+          </p>
+        </div>
+      )}
+      
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Crossword grid */}
         <div className="flex flex-col items-center">
-          <div 
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md mb-4" 
-            tabIndex={0}
-            onKeyDown={handleKeyDown}
-          >
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md mb-4">
             <div className="grid" style={{ gridTemplateColumns: `repeat(${grid.length}, minmax(0, 1fr))` }}>
               {grid.map((row, rowIndex) => (
                 row.map((cell, colIndex) => (
@@ -450,7 +552,7 @@ const Crosswords = ({ onBackToNews }: CrosswordsProps) => {
                       w-10 h-10 md:w-12 md:h-12 border border-gray-300 dark:border-gray-700 flex items-center justify-center relative
                       ${cell.correctLetter === '#' ? 'bg-gray-900 dark:bg-gray-950' : 'bg-white dark:bg-gray-800'}
                       ${selectedCell && selectedCell[0] === rowIndex && selectedCell[1] === colIndex
-                        ? 'bg-blue-200 dark:bg-blue-900/40 border-blue-500 dark:border-blue-400'
+                        ? 'bg-blue-200 dark:bg-blue-900/40 border-blue-500 dark:border-blue-400 ring-2 ring-blue-500'
                         : ''}
                       ${selectedCell && ((
                         direction === 'across' && selectedCell[0] === rowIndex && 
@@ -464,6 +566,13 @@ const Crosswords = ({ onBackToNews }: CrosswordsProps) => {
                       ${isComplete && cell.correctLetter !== '#' ? 'bg-green-100 dark:bg-green-900/20' : ''}
                     `}
                     onClick={() => handleCellClick(rowIndex, colIndex)}
+                    tabIndex={cell.correctLetter !== '#' ? 0 : -1}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleCellClick(rowIndex, colIndex);
+                      }
+                    }}
                   >
                     {cell.correctLetter !== '#' && (
                       <>
