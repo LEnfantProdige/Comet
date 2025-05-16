@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useTheme } from "next-themes";
@@ -10,12 +9,14 @@ import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, Dr
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Maximize, Minimize, Timer, Grid2X2, SquareX, Keyboard } from "lucide-react";
+import { Maximize, Minimize, Timer, Grid2X2, SquareX, Keyboard, Anchor, Rocket, Layers } from "lucide-react";
 import NewsGameCard from "@/components/news/NewsGameCard";
 import Sudoku from "@/components/news/games/Sudoku";
 import Connections from "@/components/news/games/Connections";
 import Crosswords from "@/components/news/games/Crosswords";
 import Wordle from "@/components/news/games/Wordle";
+import SpaceElevator from "@/components/science/SpaceElevator";
+import DeepSeaExploration from "@/components/science/DeepSeaExploration";
 
 interface NewsArticle {
   id: string;
@@ -27,7 +28,7 @@ interface NewsArticle {
   source: string;
 }
 
-type ActiveGameType = "sudoku" | "connections" | "crosswords" | "wordle" | null;
+type ActiveGameType = "sudoku" | "connections" | "crosswords" | "wordle" | "space-elevator" | "deep-sea" | "internet-archives" | null;
 
 const News = () => {
   const { t } = useLanguage();
@@ -204,6 +205,37 @@ const News = () => {
         return <Crosswords onBackToNews={() => setActiveGame(null)} />;
       case 'wordle':
         return <Wordle onBackToNews={() => setActiveGame(null)} />;
+      case 'space-elevator':
+        return <SpaceElevator onBack={() => setActiveGame(null)} />;
+      case 'deep-sea':
+        return <DeepSeaExploration onBack={() => setActiveGame(null)} />;
+      case 'internet-archives':
+        return (
+          <div className="w-full max-w-2xl mx-auto p-4 bg-white dark:bg-gray-900">
+            <div className="flex justify-between items-center mb-6">
+              <Button 
+                onClick={() => setActiveGame(null)}
+                variant="outline"
+                className="text-sm"
+              >
+                {t('games.back')}
+              </Button>
+              <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-gray-100">{t('games.internetarchives')}</h2>
+            </div>
+            <Card className="border dark:border-gray-700">
+              <CardContent className="pt-6">
+                <div className="text-center py-12">
+                  <Layers size={48} className="mx-auto text-amber-500 mb-4" />
+                  <h3 className="text-xl font-bold mb-2">{t('games.comingsoon')}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">{t('games.internetarchives.description')}</p>
+                  <Button onClick={() => setActiveGame(null)}>
+                    {t('games.back')}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        );
       default:
         return null;
     }
@@ -290,6 +322,25 @@ const News = () => {
                     description={t('games.crosswords.description')}
                     icon={<SquareX size={32} />}
                     onClick={() => setActiveGame("crosswords")}
+                  />
+                  <NewsGameCard 
+                    title={t('games.deepsea')}
+                    description={t('games.deepsea.description')}
+                    icon={<Anchor size={32} />}
+                    onClick={() => setActiveGame("deep-sea")}
+                  />
+                  <NewsGameCard 
+                    title={t('games.space')}
+                    description={t('games.space.description')}
+                    icon={<Rocket size={32} />}
+                    onClick={() => setActiveGame("space-elevator")}
+                  />
+                  <NewsGameCard 
+                    title={t('games.internetarchives')}
+                    description={t('games.internetarchives.description')}
+                    icon={<Layers size={32} />}
+                    onClick={() => setActiveGame("internet-archives")}
+                    comingSoon={true}
                   />
                 </div>
               </div>
