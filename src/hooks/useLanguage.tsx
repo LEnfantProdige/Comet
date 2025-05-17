@@ -1,3 +1,4 @@
+
 import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 
 type Language = 'fr' | 'en' | 'es';
@@ -79,6 +80,17 @@ const translations: Record<Language, Record<string, string>> = {
     'games.back': 'Retour aux actualités',
     'games.timer': 'Chrono',
     'games.score': 'Score',
+    'games.internetarchives': 'Archives Internet',
+    'games.internetarchives.description': 'Explorez l\'histoire du web à travers le temps',
+    'games.internetarchives.explore': 'Explorez les sites web historiques',
+    'games.internetarchives.search': 'Rechercher un site...',
+    'games.internetarchives.select': 'Sélectionnez une année pour explorer',
+    'games.internetarchives.viewing': 'Visualisation de',
+    'games.internetarchives.from': 'de',
+    'games.internetarchives.other': 'Autres années',
+    'games.internetarchives.visit': 'Visiter l\'archive',
+    'games.internetarchives.differentsite': 'Choisir un autre site',
+    'play': 'Jouer',
   },
   en: {
     'app.title': 'HistoryJourney',
@@ -150,6 +162,17 @@ const translations: Record<Language, Record<string, string>> = {
     'games.back': 'Back to news',
     'games.timer': 'Timer',
     'games.score': 'Score',
+    'games.internetarchives': 'Internet Archives',
+    'games.internetarchives.description': 'Explore the history of the web through time',
+    'games.internetarchives.explore': 'Explore historical websites',
+    'games.internetarchives.search': 'Search for a site...',
+    'games.internetarchives.select': 'Select a year to explore',
+    'games.internetarchives.viewing': 'Viewing',
+    'games.internetarchives.from': 'from',
+    'games.internetarchives.other': 'Other years',
+    'games.internetarchives.visit': 'Visit archive',
+    'games.internetarchives.differentsite': 'Choose another site',
+    'play': 'Play',
   },
   es: {
     'app.title': 'ViajeHistórico',
@@ -221,6 +244,17 @@ const translations: Record<Language, Record<string, string>> = {
     'games.back': 'Volver a noticias',
     'games.timer': 'Cronómetro',
     'games.score': 'Puntuación',
+    'games.internetarchives': 'Archivos de Internet',
+    'games.internetarchives.description': 'Explora la historia de la web a través del tiempo',
+    'games.internetarchives.explore': 'Explora sitios web históricos',
+    'games.internetarchives.search': 'Buscar un sitio...',
+    'games.internetarchives.select': 'Selecciona un año para explorar',
+    'games.internetarchives.viewing': 'Visualizando',
+    'games.internetarchives.from': 'de',
+    'games.internetarchives.other': 'Otros años',
+    'games.internetarchives.visit': 'Visitar archivo',
+    'games.internetarchives.differentsite': 'Elegir otro sitio',
+    'play': 'Jugar',
   },
 };
 
