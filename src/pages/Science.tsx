@@ -1,8 +1,10 @@
 
 import React, { useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Atom, FlaskConical, TestTube, Microscope, Rocket } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Atom, FlaskConical, TestTube, Microscope, Rocket, Sparkles } from "lucide-react";
 
 // Custom green-punk theme styles
 const greenPunkGradient = "bg-gradient-to-br from-green-900 via-emerald-700 to-teal-700";
@@ -17,6 +19,7 @@ import InfinityCraft from "@/components/science/InfinityCraft";
 
 const Science = () => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [activeGame, setActiveGame] = useState<string | null>(null);
 
   // Sample articles data
@@ -79,6 +82,34 @@ const Science = () => {
           <p className="text-gray-300 text-lg max-w-2xl mx-auto">
             {t('science.subtitle')}
           </p>
+        </div>
+
+        {/* Carte spéciale pour Éclaire */}
+        <div className="mb-8">
+          <div 
+            className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg p-6 border border-blue-400/30 cursor-pointer hover:shadow-lg transition-all group"
+            onClick={() => navigate("/science/eclaire")}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-full">
+                  <Sparkles className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-2">Éclaire</h2>
+                  <p className="text-gray-300">
+                    Plateforme d'apprentissage interactive pour les sciences STEM
+                  </p>
+                  <p className="text-sm text-gray-400 mt-1">
+                    Mathématiques • Physique • Logique • Informatique
+                  </p>
+                </div>
+              </div>
+              <Button variant="secondary" className="group-hover:scale-105 transition-transform">
+                Découvrir
+              </Button>
+            </div>
+          </div>
         </div>
 
         <Tabs defaultValue="articles" className="w-full max-w-5xl mx-auto">
