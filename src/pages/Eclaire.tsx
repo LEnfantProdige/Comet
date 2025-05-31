@@ -20,13 +20,16 @@ import {
   Calculator,
   Atom,
   Lightbulb,
-  Sparkles
+  Sparkles,
+  Check,
+  Lock
 } from "lucide-react";
 
 const Eclaire = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [selectedModule, setSelectedModule] = useState<string | null>(null);
+  const [selectedLesson, setSelectedLesson] = useState<string | null>(null);
   const [userProgress, setUserProgress] = useState({
     xp: 1247,
     streak: 5,
@@ -40,7 +43,7 @@ const Eclaire = () => {
       title: 'Mathématiques',
       description: 'Algèbre, géométrie et calculs fondamentaux',
       icon: <Calculator className="h-8 w-8" />,
-      color: 'bg-blue-500',
+      color: 'bg-emerald-500',
       progress: 75,
       lessons: 24,
       completed: 18
@@ -50,7 +53,7 @@ const Eclaire = () => {
       title: 'Physique',
       description: 'Mécanique, électricité et thermodynamique',
       icon: <Atom className="h-8 w-8" />,
-      color: 'bg-purple-500',
+      color: 'bg-green-500',
       progress: 45,
       lessons: 32,
       completed: 14
@@ -60,7 +63,7 @@ const Eclaire = () => {
       title: 'Logique',
       description: 'Raisonnement, puzzles et pensée critique',
       icon: <Brain className="h-8 w-8" />,
-      color: 'bg-green-500',
+      color: 'bg-teal-500',
       progress: 60,
       lessons: 28,
       completed: 17
@@ -70,30 +73,62 @@ const Eclaire = () => {
       title: 'Informatique',
       description: 'Algorithmes, programmation et structures de données',
       icon: <Lightbulb className="h-8 w-8" />,
-      color: 'bg-orange-500',
+      color: 'bg-lime-500',
       progress: 30,
       lessons: 40,
       completed: 12
     }
   ];
 
+  const lessonsData = {
+    math: [
+      { id: 1, title: "Les nombres entiers", description: "Découverte des nombres positifs et négatifs", completed: true, locked: false },
+      { id: 2, title: "Addition et soustraction", description: "Maîtriser les opérations de base", completed: true, locked: false },
+      { id: 3, title: "Multiplication", description: "Tables et propriétés de la multiplication", completed: true, locked: false },
+      { id: 4, title: "Division", description: "Division euclidienne et décimale", completed: false, locked: false },
+      { id: 5, title: "Fractions simples", description: "Introduction aux fractions", completed: false, locked: true },
+      { id: 6, title: "Géométrie de base", description: "Points, droites et angles", completed: false, locked: true }
+    ],
+    physics: [
+      { id: 1, title: "Qu'est-ce que la physique ?", description: "Introduction à la science physique", completed: true, locked: false },
+      { id: 2, title: "La matière et ses états", description: "Solide, liquide, gazeux", completed: true, locked: false },
+      { id: 3, title: "Le mouvement", description: "Vitesse et accélération", completed: false, locked: false },
+      { id: 4, title: "Les forces", description: "Comprendre les forces et leur effet", completed: false, locked: true },
+      { id: 5, title: "L'énergie", description: "Formes d'énergie et conservation", completed: false, locked: true }
+    ],
+    logic: [
+      { id: 1, title: "Logique booléenne", description: "Vrai, faux et opérateurs logiques", completed: true, locked: false },
+      { id: 2, title: "Raisonnement déductif", description: "Tirer des conclusions logiques", completed: true, locked: false },
+      { id: 3, title: "Syllogismes", description: "Structure des arguments logiques", completed: false, locked: false },
+      { id: 4, title: "Paradoxes", description: "Situations contradictoires apparentes", completed: false, locked: true },
+      { id: 5, title: "Théorie des ensembles", description: "Collections d'objets et relations", completed: false, locked: true }
+    ],
+    computer: [
+      { id: 1, title: "Qu'est-ce qu'un algorithme ?", description: "Séquences d'instructions", completed: true, locked: false },
+      { id: 2, title: "Variables et données", description: "Stocker et manipuler l'information", completed: false, locked: false },
+      { id: 3, title: "Conditions", description: "Prendre des décisions en programmation", completed: false, locked: true },
+      { id: 4, title: "Boucles", description: "Répéter des actions", completed: false, locked: true },
+      { id: 5, title: "Fonctions", description: "Organiser le code en modules", completed: false, locked: true }
+    ]
+  };
+
   const dailyLessons = [
     {
-      title: "Équations du second degré",
+      title: "Division euclidienne",
       subject: "Mathématiques",
       duration: "5 min",
       xp: 15,
       completed: false
     },
     {
-      title: "Les forces et le mouvement",
+      title: "Le mouvement",
       subject: "Physique", 
       duration: "7 min",
       xp: 20,
       completed: false
     },
     {
-      title: "Logique booléenne",
+      title: "Syllogismes",
       subject: "Logique",
       duration: "4 min",
       xp: 12,
@@ -108,10 +143,59 @@ const Eclaire = () => {
     { name: "Physicien en herbe", icon: "⚡", earned: false }
   ];
 
+  if (selectedLesson) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-100 dark:from-gray-900 dark:to-emerald-900 py-8 px-4">
+        <div className="container mx-auto max-w-4xl">
+          <div className="flex items-center gap-4 mb-8">
+            <Button 
+              variant="ghost" 
+              onClick={() => setSelectedLesson(null)}
+              className="p-2"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <div className="bg-emerald-500 p-3 rounded-full text-white">
+              <BookOpen className="h-8 w-8" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Leçon en cours</h1>
+              <p className="text-gray-600 dark:text-gray-300">Apprentissage interactif</p>
+            </div>
+          </div>
+
+          <Card className="max-w-2xl mx-auto">
+            <CardContent className="p-8 text-center">
+              <div className="mb-6">
+                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Play className="h-8 w-8 text-emerald-600" />
+                </div>
+                <h2 className="text-2xl font-bold mb-2">Leçon interactive</h2>
+                <p className="text-gray-600">
+                  Cette fonctionnalité sera bientôt disponible ! 
+                  Les leçons interactives d'Éclaire offriront des explications visuelles, 
+                  des quiz et des exercices pratiques.
+                </p>
+              </div>
+              <Button 
+                onClick={() => setSelectedLesson(null)}
+                className="bg-emerald-500 hover:bg-emerald-600"
+              >
+                Retour aux leçons
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   if (selectedModule) {
     const module = modules.find(m => m.id === selectedModule);
+    const lessons = lessonsData[selectedModule as keyof typeof lessonsData] || [];
+    
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 py-8 px-4">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-100 dark:from-gray-900 dark:to-emerald-900 py-8 px-4">
         <div className="container mx-auto max-w-4xl">
           <div className="flex items-center gap-4 mb-8">
             <Button 
@@ -132,21 +216,47 @@ const Eclaire = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="md:col-span-2 space-y-4">
-              {[1, 2, 3, 4, 5].map((lesson) => (
-                <Card key={lesson} className="hover:shadow-md transition-shadow cursor-pointer">
+              {lessons.map((lesson) => (
+                <Card 
+                  key={lesson.id} 
+                  className={`transition-all cursor-pointer ${
+                    lesson.locked 
+                      ? 'opacity-60 cursor-not-allowed' 
+                      : 'hover:shadow-md hover:scale-[1.02]'
+                  }`}
+                  onClick={() => !lesson.locked && setSelectedLesson(lesson.id.toString())}
+                >
                   <CardContent className="p-4 flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center font-bold">
-                        {lesson}
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold ${
+                        lesson.completed 
+                          ? 'bg-emerald-500 text-white' 
+                          : lesson.locked 
+                            ? 'bg-gray-200 text-gray-400' 
+                            : 'bg-emerald-100 text-emerald-600'
+                      }`}>
+                        {lesson.completed ? (
+                          <Check className="h-6 w-6" />
+                        ) : lesson.locked ? (
+                          <Lock className="h-5 w-5" />
+                        ) : (
+                          lesson.id
+                        )}
                       </div>
                       <div>
-                        <h3 className="font-semibold">Leçon {lesson}</h3>
-                        <p className="text-sm text-gray-500">Introduction aux concepts</p>
+                        <h3 className="font-semibold">{lesson.title}</h3>
+                        <p className="text-sm text-gray-500">{lesson.description}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge variant="secondary">+15 XP</Badge>
-                      <Play className="h-5 w-5 text-blue-500" />
+                      {!lesson.locked && (
+                        <>
+                          <Badge variant="secondary" className="bg-emerald-100 text-emerald-700">
+                            +15 XP
+                          </Badge>
+                          <Play className="h-5 w-5 text-emerald-500" />
+                        </>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -162,13 +272,40 @@ const Eclaire = () => {
                   <div className="space-y-3">
                     <div className="flex justify-between text-sm">
                       <span>Leçons complétées</span>
-                      <span>{module?.completed}/{module?.lessons}</span>
+                      <span>{lessons.filter(l => l.completed).length}/{lessons.length}</span>
                     </div>
                     <Progress value={module?.progress} className="h-2" />
                     <div className="text-center text-sm text-gray-500">
                       {module?.progress}% terminé
                     </div>
                   </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Prochaine étape</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {(() => {
+                    const nextLesson = lessons.find(l => !l.completed && !l.locked);
+                    if (nextLesson) {
+                      return (
+                        <div className="space-y-2">
+                          <h4 className="font-medium">{nextLesson.title}</h4>
+                          <p className="text-sm text-gray-500">{nextLesson.description}</p>
+                          <Button 
+                            size="sm" 
+                            className="w-full bg-emerald-500 hover:bg-emerald-600"
+                            onClick={() => setSelectedLesson(nextLesson.id.toString())}
+                          >
+                            Commencer
+                          </Button>
+                        </div>
+                      );
+                    }
+                    return <p className="text-sm text-gray-500">Module terminé ! Félicitations 🎉</p>;
+                  })()}
                 </CardContent>
               </Card>
             </div>
@@ -179,7 +316,7 @@ const Eclaire = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-100 dark:from-gray-900 dark:to-emerald-900 py-8 px-4">
       <div className="container mx-auto max-w-6xl">
         {/* Header avec navigation */}
         <div className="flex justify-between items-center mb-8">
@@ -196,7 +333,7 @@ const Eclaire = () => {
               <Flame className="h-5 w-5" />
               <span className="font-bold">{userProgress.streak}</span>
             </div>
-            <div className="flex items-center gap-2 text-blue-500">
+            <div className="flex items-center gap-2 text-emerald-500">
               <Zap className="h-5 w-5" />
               <span className="font-bold">{userProgress.xp} XP</span>
             </div>
@@ -206,11 +343,11 @@ const Eclaire = () => {
         {/* Hero Section */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-4">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-4 rounded-full">
+            <div className="bg-gradient-to-r from-emerald-500 to-green-500 p-4 rounded-full">
               <Sparkles className="h-12 w-12 text-white" />
             </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-green-600 mb-4">
             Éclaire
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
@@ -223,7 +360,7 @@ const Eclaire = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <Card className="text-center">
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-blue-500">{userProgress.xp}</div>
+              <div className="text-2xl font-bold text-emerald-500">{userProgress.xp}</div>
               <div className="text-sm text-gray-500">Total XP</div>
             </CardContent>
           </Card>
@@ -235,13 +372,13 @@ const Eclaire = () => {
           </Card>
           <Card className="text-center">
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-purple-500">{userProgress.level}</div>
+              <div className="text-2xl font-bold text-green-500">{userProgress.level}</div>
               <div className="text-sm text-gray-500">Niveau</div>
             </CardContent>
           </Card>
           <Card className="text-center">
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-green-500">75%</div>
+              <div className="text-2xl font-bold text-teal-500">75%</div>
               <div className="text-sm text-gray-500">Objectif quotidien</div>
             </CardContent>
           </Card>
@@ -252,10 +389,12 @@ const Eclaire = () => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2">
-                <Target className="h-5 w-5 text-green-500" />
+                <Target className="h-5 w-5 text-emerald-500" />
                 Objectif quotidien
               </CardTitle>
-              <Badge variant="secondary">112/{userProgress.dailyGoal} XP</Badge>
+              <Badge variant="secondary" className="bg-emerald-100 text-emerald-700">
+                112/{userProgress.dailyGoal} XP
+              </Badge>
             </div>
           </CardHeader>
           <CardContent>
@@ -268,14 +407,14 @@ const Eclaire = () => {
           {/* Modules principaux */}
           <div className="lg:col-span-2">
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              <BookOpen className="h-6 w-6 text-blue-500" />
+              <BookOpen className="h-6 w-6 text-emerald-500" />
               Tes modules
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {modules.map((module) => (
                 <Card 
                   key={module.id} 
-                  className="hover:shadow-lg transition-all cursor-pointer group"
+                  className="hover:shadow-lg transition-all cursor-pointer group hover:scale-[1.02]"
                   onClick={() => setSelectedModule(module.id)}
                 >
                   <CardContent className="p-6">
@@ -315,15 +454,17 @@ const Eclaire = () => {
               </CardHeader>
               <CardContent className="space-y-3">
                 {dailyLessons.map((lesson, index) => (
-                  <div key={index} className="p-3 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
+                  <div key={index} className="p-3 border rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-900/20 cursor-pointer transition-colors">
                     <div className="flex justify-between items-start mb-1">
                       <h4 className="font-medium text-sm">{lesson.title}</h4>
-                      {lesson.completed && <span className="text-green-500">✓</span>}
+                      {lesson.completed && <span className="text-emerald-500">✓</span>}
                     </div>
                     <p className="text-xs text-gray-500 mb-2">{lesson.subject}</p>
                     <div className="flex justify-between items-center text-xs">
                       <span className="text-gray-400">{lesson.duration}</span>
-                      <Badge variant="outline" className="text-xs">+{lesson.xp} XP</Badge>
+                      <Badge variant="outline" className="text-xs border-emerald-200 text-emerald-700">
+                        +{lesson.xp} XP
+                      </Badge>
                     </div>
                   </div>
                 ))}
@@ -343,9 +484,9 @@ const Eclaire = () => {
                   {achievements.map((achievement, index) => (
                     <div 
                       key={index} 
-                      className={`text-center p-3 rounded-lg border ${
+                      className={`text-center p-3 rounded-lg border transition-all ${
                         achievement.earned 
-                          ? 'bg-yellow-50 border-yellow-200 dark:bg-yellow-900/20' 
+                          ? 'bg-yellow-50 border-yellow-200 dark:bg-yellow-900/20 shadow-sm' 
                           : 'bg-gray-50 border-gray-200 dark:bg-gray-800'
                       }`}
                     >
