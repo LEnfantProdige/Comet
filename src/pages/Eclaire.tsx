@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,14 +21,23 @@ import {
   Lightbulb,
   Sparkles,
   Check,
-  Lock
+  Lock,
+  Gamepad2,
+  Shapes
 } from "lucide-react";
+
+// Import des nouveaux composants
+import AlgebraLesson from "@/components/eclaire/AlgebraLesson";
+import LaserMazeGame from "@/components/eclaire/LaserMazeGame";
+import GeometryLesson from "@/components/eclaire/GeometryLesson";
+import ArithmeticGame from "@/components/eclaire/ArithmeticGame";
 
 const Eclaire = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [selectedModule, setSelectedModule] = useState<string | null>(null);
   const [selectedLesson, setSelectedLesson] = useState<string | null>(null);
+  const [activeComponent, setActiveComponent] = useState<string | null>(null);
   const [userProgress, setUserProgress] = useState({
     xp: 1247,
     streak: 5,
@@ -82,33 +90,33 @@ const Eclaire = () => {
 
   const lessonsData = {
     math: [
-      { id: 1, title: "Les nombres entiers", description: "Découverte des nombres positifs et négatifs", completed: true, locked: false },
-      { id: 2, title: "Addition et soustraction", description: "Maîtriser les opérations de base", completed: true, locked: false },
-      { id: 3, title: "Multiplication", description: "Tables et propriétés de la multiplication", completed: true, locked: false },
-      { id: 4, title: "Division", description: "Division euclidienne et décimale", completed: false, locked: false },
-      { id: 5, title: "Fractions simples", description: "Introduction aux fractions", completed: false, locked: true },
-      { id: 6, title: "Géométrie de base", description: "Points, droites et angles", completed: false, locked: true }
+      { id: 'algebra', title: "Algèbre", description: "Équations et résolution", completed: true, locked: false, type: 'lesson' },
+      { id: 'geometry', title: "Géométrie", description: "Formes et mesures", completed: true, locked: false, type: 'lesson' },
+      { id: 'arithmetic', title: "Calcul Mental", description: "Entraînement rapide", completed: false, locked: false, type: 'game' },
+      { id: 4, title: "Division", description: "Division euclidienne et décimale", completed: false, locked: false, type: 'lesson' },
+      { id: 5, title: "Fractions simples", description: "Introduction aux fractions", completed: false, locked: true, type: 'lesson' },
+      { id: 6, title: "Géométrie de base", description: "Points, droites et angles", completed: false, locked: true, type: 'lesson' }
     ],
     physics: [
-      { id: 1, title: "Qu'est-ce que la physique ?", description: "Introduction à la science physique", completed: true, locked: false },
-      { id: 2, title: "La matière et ses états", description: "Solide, liquide, gazeux", completed: true, locked: false },
-      { id: 3, title: "Le mouvement", description: "Vitesse et accélération", completed: false, locked: false },
-      { id: 4, title: "Les forces", description: "Comprendre les forces et leur effet", completed: false, locked: true },
-      { id: 5, title: "L'énergie", description: "Formes d'énergie et conservation", completed: false, locked: true }
+      { id: 1, title: "Qu'est-ce que la physique ?", description: "Introduction à la science physique", completed: true, locked: false, type: 'lesson' },
+      { id: 2, title: "La matière et ses états", description: "Solide, liquide, gazeux", completed: true, locked: false, type: 'lesson' },
+      { id: 3, title: "Le mouvement", description: "Vitesse et accélération", completed: false, locked: false, type: 'lesson' },
+      { id: 4, title: "Les forces", description: "Comprendre les forces et leur effet", completed: false, locked: true, type: 'lesson' },
+      { id: 5, title: "L'énergie", description: "Formes d'énergie et conservation", completed: false, locked: true, type: 'lesson' }
     ],
     logic: [
-      { id: 1, title: "Logique booléenne", description: "Vrai, faux et opérateurs logiques", completed: true, locked: false },
-      { id: 2, title: "Raisonnement déductif", description: "Tirer des conclusions logiques", completed: true, locked: false },
-      { id: 3, title: "Syllogismes", description: "Structure des arguments logiques", completed: false, locked: false },
-      { id: 4, title: "Paradoxes", description: "Situations contradictoires apparentes", completed: false, locked: true },
-      { id: 5, title: "Théorie des ensembles", description: "Collections d'objets et relations", completed: false, locked: true }
+      { id: 1, title: "Logique booléenne", description: "Vrai, faux et opérateurs logiques", completed: true, locked: false, type: 'lesson' },
+      { id: 2, title: "Raisonnement déductif", description: "Tirer des conclusions logiques", completed: true, locked: false, type: 'lesson' },
+      { id: 'laser-maze', title: "Labyrinthe Laser", description: "Jeu de logique avec miroirs", completed: false, locked: false, type: 'game' },
+      { id: 4, title: "Paradoxes", description: "Situations contradictoires apparentes", completed: false, locked: true, type: 'lesson' },
+      { id: 5, title: "Théorie des ensembles", description: "Collections d'objets et relations", completed: false, locked: true, type: 'lesson' }
     ],
     computer: [
-      { id: 1, title: "Qu'est-ce qu'un algorithme ?", description: "Séquences d'instructions", completed: true, locked: false },
-      { id: 2, title: "Variables et données", description: "Stocker et manipuler l'information", completed: false, locked: false },
-      { id: 3, title: "Conditions", description: "Prendre des décisions en programmation", completed: false, locked: true },
-      { id: 4, title: "Boucles", description: "Répéter des actions", completed: false, locked: true },
-      { id: 5, title: "Fonctions", description: "Organiser le code en modules", completed: false, locked: true }
+      { id: 1, title: "Qu'est-ce qu'un algorithme ?", description: "Séquences d'instructions", completed: true, locked: false, type: 'lesson' },
+      { id: 2, title: "Variables et données", description: "Stocker et manipuler l'information", completed: false, locked: false, type: 'lesson' },
+      { id: 3, title: "Conditions", description: "Prendre des décisions en programmation", completed: false, locked: true, type: 'lesson' },
+      { id: 4, title: "Boucles", description: "Répéter des actions", completed: false, locked: true, type: 'lesson' },
+      { id: 5, title: "Fonctions", description: "Organiser le code en modules", completed: false, locked: true, type: 'lesson' }
     ]
   };
 
@@ -142,6 +150,31 @@ const Eclaire = () => {
     { name: "Expert en maths", icon: "📐", earned: false },
     { name: "Physicien en herbe", icon: "⚡", earned: false }
   ];
+
+  const handleLessonComplete = (xp: number) => {
+    setUserProgress(prev => ({
+      ...prev,
+      xp: prev.xp + xp
+    }));
+    setActiveComponent(null);
+    setSelectedLesson(null);
+  };
+
+  if (activeComponent === 'algebra') {
+    return <AlgebraLesson onBack={() => setActiveComponent(null)} onComplete={handleLessonComplete} />;
+  }
+
+  if (activeComponent === 'laser-maze') {
+    return <LaserMazeGame onBack={() => setActiveComponent(null)} onComplete={handleLessonComplete} />;
+  }
+
+  if (activeComponent === 'geometry') {
+    return <GeometryLesson onBack={() => setActiveComponent(null)} onComplete={handleLessonComplete} />;
+  }
+
+  if (activeComponent === 'arithmetic') {
+    return <ArithmeticGame onBack={() => setActiveComponent(null)} onComplete={handleLessonComplete} />;
+  }
 
   if (selectedLesson) {
     return (
@@ -224,7 +257,15 @@ const Eclaire = () => {
                       ? 'opacity-60 cursor-not-allowed' 
                       : 'hover:shadow-md hover:scale-[1.02]'
                   }`}
-                  onClick={() => !lesson.locked && setSelectedLesson(lesson.id.toString())}
+                  onClick={() => {
+                    if (!lesson.locked) {
+                      if (typeof lesson.id === 'string' && ['algebra', 'laser-maze', 'geometry', 'arithmetic'].includes(lesson.id)) {
+                        setActiveComponent(lesson.id);
+                      } else {
+                        setSelectedLesson(lesson.id.toString());
+                      }
+                    }
+                  }}
                 >
                   <CardContent className="p-4 flex items-center justify-between">
                     <div className="flex items-center gap-4">
@@ -239,6 +280,10 @@ const Eclaire = () => {
                           <Check className="h-6 w-6" />
                         ) : lesson.locked ? (
                           <Lock className="h-5 w-5" />
+                        ) : lesson.type === 'game' ? (
+                          <Gamepad2 className="h-5 w-5" />
+                        ) : lesson.type === 'lesson' && typeof lesson.id === 'string' ? (
+                          <Shapes className="h-5 w-5" />
                         ) : (
                           lesson.id
                         )}
@@ -246,13 +291,18 @@ const Eclaire = () => {
                       <div>
                         <h3 className="font-semibold">{lesson.title}</h3>
                         <p className="text-sm text-gray-500">{lesson.description}</p>
+                        {lesson.type === 'game' && (
+                          <Badge variant="secondary" className="mt-1 bg-purple-100 text-purple-700">
+                            Jeu interactif
+                          </Badge>
+                        )}
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
                       {!lesson.locked && (
                         <>
                           <Badge variant="secondary" className="bg-emerald-100 text-emerald-700">
-                            +15 XP
+                            +{lesson.type === 'game' ? '25-50' : '15'} XP
                           </Badge>
                           <Play className="h-5 w-5 text-emerald-500" />
                         </>
@@ -297,7 +347,13 @@ const Eclaire = () => {
                           <Button 
                             size="sm" 
                             className="w-full bg-emerald-500 hover:bg-emerald-600"
-                            onClick={() => setSelectedLesson(nextLesson.id.toString())}
+                            onClick={() => {
+                              if (typeof nextLesson.id === 'string' && ['algebra', 'laser-maze', 'geometry', 'arithmetic'].includes(nextLesson.id)) {
+                                setActiveComponent(nextLesson.id);
+                              } else {
+                                setSelectedLesson(nextLesson.id.toString());
+                              }
+                            }}
                           >
                             Commencer
                           </Button>
