@@ -9,7 +9,28 @@ import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, Dr
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Maximize, Minimize, Timer, Grid2X2, SquareX, Keyboard, Anchor, Rocket, Layers } from "lucide-react";
+import { 
+  Maximize, 
+  Minimize, 
+  Timer, 
+  Grid2X2, 
+  SquareX, 
+  Keyboard, 
+  Anchor, 
+  Rocket, 
+  Layers,
+  ChevronLeft,
+  ChevronRight,
+  Star,
+  TrendingUp
+} from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import NewsGameCard from "@/components/news/NewsGameCard";
 import Sudoku from "@/components/news/games/Sudoku";
 import Connections from "@/components/news/games/Connections";
@@ -84,8 +105,19 @@ const News = () => {
       date: "2025-03-22",
       category: "environment",
       source: "Green Earth"
+    },
+    {
+      id: "6",
+      title: "Percée en informatique quantique",
+      content: "Google annonce une avancée majeure dans l'informatique quantique avec son nouveau processeur qui pourrait révolutionner le calcul complexe.",
+      image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800",
+      date: "2025-05-10",
+      category: "technology",
+      source: "Quantum Today"
     }
   ];
+
+  const featuredArticles = articles.slice(0, 3);
 
   const handleCiteSource = (source: string) => {
     navigator.clipboard.writeText(`Source: ${source}`);
@@ -243,12 +275,12 @@ const News = () => {
   
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 py-12 px-4 md:px-8">
-      <div className="container mx-auto">
+      <div className="container mx-auto max-w-7xl">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white font-serif mb-3">
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-800 dark:text-white font-serif mb-4">
             {t('news.title')}
           </h1>
-          <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-300 text-xl max-w-3xl mx-auto">
             {t('news.subtitle')}
           </p>
         </div>
@@ -256,101 +288,161 @@ const News = () => {
         {activeGame ? (
           renderActiveGame()
         ) : (
-          <Tabs defaultValue="all" className="w-full">
-            <TabsList className="w-full bg-gray-100 dark:bg-gray-800 mb-8">
-              <TabsTrigger value="all" className="flex-1">
-                {t('news.categories.all')}
-              </TabsTrigger>
-              <TabsTrigger value="space" className="flex-1">
-                {t('news.categories.space')}
-              </TabsTrigger>
-              <TabsTrigger value="health" className="flex-1">
-                {t('news.categories.health')}
-              </TabsTrigger>
-              <TabsTrigger value="environment" className="flex-1">
-                {t('news.categories.environment')}
-              </TabsTrigger>
-              <TabsTrigger value="games" className="flex-1">
-                {t('news.categories.games')}
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="all" className="animate-fade-in">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {articles.map((article) => (
-                  <NewsCard key={article.id} article={article} onClick={() => setOpenArticle(article)} />
-                ))}
+          <>
+            {/* Carrousel d'articles à la une */}
+            <section className="mb-16">
+              <div className="flex items-center gap-3 mb-8">
+                <Star className="h-7 w-7 text-yellow-500" />
+                <h2 className="text-3xl font-bold text-gray-800 dark:text-white">À la une</h2>
+                <TrendingUp className="h-6 w-6 text-green-500" />
               </div>
-            </TabsContent>
-            
-            {["space", "health", "environment"].map((category) => (
-              <TabsContent key={category} value={category} className="animate-fade-in">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {articles
-                    .filter(article => article.category === category)
-                    .map((article) => (
-                      <NewsCard key={article.id} article={article} onClick={() => setOpenArticle(article)} />
-                    ))}
+              
+              <Carousel className="w-full" opts={{ align: "start", loop: true }}>
+                <CarouselContent>
+                  {featuredArticles.map((article) => (
+                    <CarouselItem key={article.id} className="md:basis-1/2 lg:basis-1/3">
+                      <FeaturedNewsCard article={article} onClick={() => setOpenArticle(article)} />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="hidden md:flex -left-12" />
+                <CarouselNext className="hidden md:flex -right-12" />
+              </Carousel>
+            </section>
+
+            <Tabs defaultValue="all" className="w-full">
+              <TabsList className="w-full bg-gray-100 dark:bg-gray-800 mb-8 grid grid-cols-5">
+                <TabsTrigger value="all" className="flex-1">
+                  {t('news.categories.all')}
+                </TabsTrigger>
+                <TabsTrigger value="space" className="flex-1">
+                  {t('news.categories.space')}
+                </TabsTrigger>
+                <TabsTrigger value="health" className="flex-1">
+                  {t('news.categories.health')}
+                </TabsTrigger>
+                <TabsTrigger value="environment" className="flex-1">
+                  {t('news.categories.environment')}
+                </TabsTrigger>
+                <TabsTrigger value="games" className="flex-1">
+                  {t('news.categories.games')}
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="all" className="animate-fade-in">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {articles.map((article) => (
+                    <NewsCard key={article.id} article={article} onClick={() => setOpenArticle(article)} />
+                  ))}
                 </div>
               </TabsContent>
-            ))}
-            
-            {/* Games Tab */}
-            <TabsContent value="games" className="animate-fade-in">
-              <div className="max-w-4xl mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <NewsGameCard 
-                    title={t('games.sudoku')}
-                    description={t('games.sudoku.description')}
-                    icon={<Grid2X2 size={32} />}
-                    onClick={() => setActiveGame("sudoku")}
-                  />
-                  <NewsGameCard 
-                    title={t('games.connections')}
-                    description={t('games.connections.description')}
-                    icon={<Timer size={32} />}
-                    onClick={() => setActiveGame("connections")}
-                  />
-                  <NewsGameCard 
-                    title={t('games.wordle')}
-                    description={t('games.wordle.description')}
-                    icon={<Keyboard size={32} />}
-                    onClick={() => setActiveGame("wordle")}
-                  />
-                  <NewsGameCard 
-                    title={t('games.crosswords')}
-                    description={t('games.crosswords.description')}
-                    icon={<SquareX size={32} />}
-                    onClick={() => setActiveGame("crosswords")}
-                  />
-                  <NewsGameCard 
-                    title={t('games.deepsea')}
-                    description={t('games.deepsea.description')}
-                    icon={<Anchor size={32} />}
-                    onClick={() => setActiveGame("deep-sea")}
-                  />
-                  <NewsGameCard 
-                    title={t('games.space')}
-                    description={t('games.space.description')}
-                    icon={<Rocket size={32} />}
-                    onClick={() => setActiveGame("space-elevator")}
-                  />
-                  <NewsGameCard 
-                    title={t('games.internetarchives')}
-                    description={t('games.internetarchives.description')}
-                    icon={<Layers size={32} />}
-                    onClick={() => setActiveGame("internet-archives")}
-                    comingSoon={true}
-                  />
+              
+              {["space", "health", "environment"].map((category) => (
+                <TabsContent key={category} value={category} className="animate-fade-in">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {articles
+                      .filter(article => article.category === category)
+                      .map((article) => (
+                        <NewsCard key={article.id} article={article} onClick={() => setOpenArticle(article)} />
+                      ))}
+                  </div>
+                </TabsContent>
+              ))}
+              
+              {/* Games Tab */}
+              <TabsContent value="games" className="animate-fade-in">
+                <div className="max-w-4xl mx-auto">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <NewsGameCard 
+                      title={t('games.sudoku')}
+                      description={t('games.sudoku.description')}
+                      icon={<Grid2X2 size={32} />}
+                      onClick={() => setActiveGame("sudoku")}
+                    />
+                    <NewsGameCard 
+                      title={t('games.connections')}
+                      description={t('games.connections.description')}
+                      icon={<Timer size={32} />}
+                      onClick={() => setActiveGame("connections")}
+                    />
+                    <NewsGameCard 
+                      title={t('games.wordle')}
+                      description={t('games.wordle.description')}
+                      icon={<Keyboard size={32} />}
+                      onClick={() => setActiveGame("wordle")}
+                    />
+                    <NewsGameCard 
+                      title={t('games.crosswords')}
+                      description={t('games.crosswords.description')}
+                      icon={<SquareX size={32} />}
+                      onClick={() => setActiveGame("crosswords")}
+                    />
+                    <NewsGameCard 
+                      title={t('games.deepsea')}
+                      description={t('games.deepsea.description')}
+                      icon={<Anchor size={32} />}
+                      onClick={() => setActiveGame("deep-sea")}
+                    />
+                    <NewsGameCard 
+                      title={t('games.space')}
+                      description={t('games.space.description')}
+                      icon={<Rocket size={32} />}
+                      onClick={() => setActiveGame("space-elevator")}
+                    />
+                    <NewsGameCard 
+                      title={t('games.internetarchives')}
+                      description={t('games.internetarchives.description')}
+                      icon={<Layers size={32} />}
+                      onClick={() => setActiveGame("internet-archives")}
+                      comingSoon={true}
+                    />
+                  </div>
                 </div>
-              </div>
-            </TabsContent>
-          </Tabs>
+              </TabsContent>
+            </Tabs>
+          </>
         )}
       </div>
       
       {renderArticleDetail()}
     </div>
+  );
+};
+
+// Featured News Card Component for Carousel
+interface FeaturedNewsCardProps {
+  article: NewsArticle;
+  onClick: () => void;
+}
+
+const FeaturedNewsCard = ({ article, onClick }: FeaturedNewsCardProps) => {
+  return (
+    <Card 
+      className="border-0 bg-transparent cursor-pointer group overflow-hidden h-96"
+      onClick={onClick}
+    >
+      <div className="relative h-full rounded-xl overflow-hidden">
+        <img 
+          src={article.image} 
+          alt={article.title}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+          <div className="mb-2">
+            <span className="inline-block px-3 py-1 bg-blue-600 text-white text-xs font-semibold rounded-full">
+              {article.category}
+            </span>
+          </div>
+          <h3 className="text-xl font-bold mb-3 line-clamp-2">{article.title}</h3>
+          <p className="text-sm text-gray-300 line-clamp-2 mb-3">{article.content}</p>
+          <div className="flex justify-between items-center text-xs text-gray-400">
+            <span>{article.date}</span>
+            <span>{article.source}</span>
+          </div>
+        </div>
+      </div>
+    </Card>
   );
 };
 
@@ -363,26 +455,31 @@ interface NewsCardProps {
 const NewsCard = ({ article, onClick }: NewsCardProps) => {
   return (
     <Card 
-      className="border bg-white dark:bg-gray-800 cursor-pointer hover:shadow-md transition-all duration-300 overflow-hidden"
+      className="border bg-white dark:bg-gray-800 cursor-pointer hover:shadow-xl transition-all duration-300 overflow-hidden group"
       onClick={onClick}
     >
-      <div className="h-40 relative overflow-hidden">
+      <div className="h-48 relative overflow-hidden">
         <img 
           src={article.image} 
           alt={article.title}
-          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105" 
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" 
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-        <div className="absolute bottom-0 left-0 p-4">
-          <h3 className="text-lg font-bold text-white">{article.title}</h3>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+        <div className="absolute top-3 left-3">
+          <span className="inline-block px-2 py-1 bg-white/90 text-gray-800 text-xs font-semibold rounded">
+            {article.category}
+          </span>
+        </div>
+        <div className="absolute bottom-3 left-3 right-3">
+          <h3 className="text-lg font-bold text-white line-clamp-2">{article.title}</h3>
         </div>
       </div>
       <CardContent className="pt-4">
-        <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">{article.content}</p>
+        <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3">{article.content}</p>
       </CardContent>
       <CardFooter className="flex justify-between">
         <span className="text-xs text-gray-500">{article.date}</span>
-        <span className="text-xs text-blue-600 dark:text-blue-400">{article.category}</span>
+        <span className="text-xs text-blue-600 dark:text-blue-400 font-medium">{article.source}</span>
       </CardFooter>
     </Card>
   );
