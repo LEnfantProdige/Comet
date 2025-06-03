@@ -34,6 +34,10 @@ import ArithmeticGame from "@/components/eclaire/ArithmeticGame";
 import PhysicsLesson from "@/components/eclaire/PhysicsLesson";
 import ComputerScienceLesson from "@/components/eclaire/ComputerScienceLesson";
 import LogicLesson from "@/components/eclaire/LogicLesson";
+import DivisionLesson from "@/components/eclaire/DivisionLesson";
+import FractionsLesson from "@/components/eclaire/FractionsLesson";
+import TangramGame from "@/components/eclaire/TangramGame";
+import AdvancedGeometryLesson from "@/components/eclaire/AdvancedGeometryLesson";
 
 const Eclaire = () => {
   const { t } = useLanguage();
@@ -96,22 +100,22 @@ const Eclaire = () => {
       { id: 'algebra', title: "Algèbre", description: "Équations et résolution", completed: true, locked: false, type: 'lesson' },
       { id: 'geometry', title: "Géométrie", description: "Formes et mesures", completed: true, locked: false, type: 'lesson' },
       { id: 'arithmetic', title: "Calcul Mental", description: "Entraînement rapide", completed: true, locked: false, type: 'game' },
-      { id: 4, title: "Division", description: "Division euclidienne et décimale", completed: true, locked: false, type: 'lesson' },
-      { id: 5, title: "Fractions simples", description: "Introduction aux fractions", completed: false, locked: false, type: 'lesson' },
-      { id: 6, title: "Géométrie avancée", description: "Volumes et aires", completed: false, locked: true, type: 'lesson' }
+      { id: 'division', title: "Division", description: "Division euclidienne et décimale", completed: true, locked: false, type: 'lesson' },
+      { id: 'fractions', title: "Fractions simples", description: "Introduction aux fractions", completed: false, locked: false, type: 'lesson' },
+      { id: 'advanced-geometry', title: "Géométrie avancée", description: "Volumes et aires", completed: false, locked: false, type: 'lesson' }
     ],
     physics: [
       { id: 'physics-basics', title: "Bases de la physique", description: "Introduction aux concepts", completed: true, locked: false, type: 'lesson' },
       { id: 2, title: "La matière et ses états", description: "Solide, liquide, gazeux", completed: true, locked: false, type: 'lesson' },
       { id: 3, title: "Le mouvement", description: "Vitesse et accélération", completed: true, locked: false, type: 'lesson' },
       { id: 4, title: "Les forces", description: "Comprendre les forces et leur effet", completed: false, locked: false, type: 'lesson' },
-      { id: 5, title: "L'énergie", description: "Formes d'énergie et conservation", completed: false, locked: true, type: 'lesson' }
+      { id: 5, title: "L'énergie", description: "Formes d'énergie et conservation", completed: false, locked: false, type: 'lesson' }
     ],
     logic: [
       { id: 'logic-basics', title: "Logique de base", description: "Raisonnement et déduction", completed: true, locked: false, type: 'lesson' },
       { id: 2, title: "Raisonnement déductif", description: "Tirer des conclusions logiques", completed: true, locked: false, type: 'lesson' },
       { id: 'laser-maze', title: "Labyrinthe Laser", description: "Jeu de logique avec miroirs", completed: true, locked: false, type: 'game' },
-      { id: 4, title: "Paradoxes", description: "Situations contradictoires apparentes", completed: true, locked: false, type: 'lesson' },
+      { id: 'tangram', title: "Tangram", description: "Puzzle de formes géométriques", completed: false, locked: false, type: 'game' },
       { id: 5, title: "Théorie des ensembles", description: "Collections d'objets et relations", completed: false, locked: false, type: 'lesson' }
     ],
     computer: [
@@ -119,7 +123,7 @@ const Eclaire = () => {
       { id: 2, title: "Variables et données", description: "Stocker et manipuler l'information", completed: true, locked: false, type: 'lesson' },
       { id: 3, title: "Conditions", description: "Prendre des décisions en programmation", completed: true, locked: false, type: 'lesson' },
       { id: 4, title: "Boucles", description: "Répéter des actions", completed: false, locked: false, type: 'lesson' },
-      { id: 5, title: "Fonctions", description: "Organiser le code en modules", completed: false, locked: true, type: 'lesson' }
+      { id: 5, title: "Fonctions", description: "Organiser le code en modules", completed: false, locked: false, type: 'lesson' }
     ]
   };
 
@@ -189,6 +193,22 @@ const Eclaire = () => {
 
   if (activeComponent === 'logic-basics') {
     return <LogicLesson onBack={() => setActiveComponent(null)} onComplete={handleLessonComplete} />;
+  }
+
+  if (activeComponent === 'division') {
+    return <DivisionLesson onBack={() => setActiveComponent(null)} onComplete={handleLessonComplete} />;
+  }
+
+  if (activeComponent === 'fractions') {
+    return <FractionsLesson onBack={() => setActiveComponent(null)} onComplete={handleLessonComplete} />;
+  }
+
+  if (activeComponent === 'tangram') {
+    return <TangramGame onBack={() => setActiveComponent(null)} onComplete={handleLessonComplete} />;
+  }
+
+  if (activeComponent === 'advanced-geometry') {
+    return <AdvancedGeometryLesson onBack={() => setActiveComponent(null)} onComplete={handleLessonComplete} />;
   }
 
   if (selectedLesson) {
@@ -274,7 +294,7 @@ const Eclaire = () => {
                   }`}
                   onClick={() => {
                     if (!lesson.locked) {
-                      if (typeof lesson.id === 'string' && ['algebra', 'laser-maze', 'geometry', 'arithmetic', 'physics-basics', 'computer-basics', 'logic-basics'].includes(lesson.id)) {
+                      if (typeof lesson.id === 'string' && ['algebra', 'laser-maze', 'geometry', 'arithmetic', 'physics-basics', 'computer-basics', 'logic-basics', 'division', 'fractions', 'tangram', 'advanced-geometry'].includes(lesson.id)) {
                         setActiveComponent(lesson.id);
                       } else {
                         setSelectedLesson(lesson.id.toString());
@@ -363,7 +383,7 @@ const Eclaire = () => {
                             size="sm" 
                             className="w-full bg-emerald-500 hover:bg-emerald-600"
                             onClick={() => {
-                              if (typeof nextLesson.id === 'string' && ['algebra', 'laser-maze', 'geometry', 'arithmetic', 'physics-basics', 'computer-basics', 'logic-basics'].includes(nextLesson.id)) {
+                              if (typeof nextLesson.id === 'string' && ['algebra', 'laser-maze', 'geometry', 'arithmetic', 'physics-basics', 'computer-basics', 'logic-basics', 'division', 'fractions', 'tangram', 'advanced-geometry'].includes(nextLesson.id)) {
                                 setActiveComponent(nextLesson.id);
                               } else {
                                 setSelectedLesson(nextLesson.id.toString());
