@@ -106,24 +106,24 @@ const Eclaire = () => {
     ],
     physics: [
       { id: 'physics-basics', title: "Bases de la physique", description: "Introduction aux concepts", completed: true, locked: false, type: 'lesson' },
-      { id: 2, title: "La matière et ses états", description: "Solide, liquide, gazeux", completed: true, locked: false, type: 'lesson' },
-      { id: 3, title: "Le mouvement", description: "Vitesse et accélération", completed: true, locked: false, type: 'lesson' },
-      { id: 4, title: "Les forces", description: "Comprendre les forces et leur effet", completed: false, locked: false, type: 'lesson' },
-      { id: 5, title: "L'énergie", description: "Formes d'énergie et conservation", completed: false, locked: false, type: 'lesson' }
+      { id: 'matter-states', title: "La matière et ses états", description: "Solide, liquide, gazeux", completed: false, locked: false, type: 'lesson' },
+      { id: 'movement', title: "Le mouvement", description: "Vitesse et accélération", completed: false, locked: false, type: 'lesson' },
+      { id: 'forces', title: "Les forces", description: "Comprendre les forces et leur effet", completed: false, locked: false, type: 'lesson' },
+      { id: 'energy', title: "L'énergie", description: "Formes d'énergie et conservation", completed: false, locked: false, type: 'lesson' }
     ],
     logic: [
       { id: 'logic-basics', title: "Logique de base", description: "Raisonnement et déduction", completed: true, locked: false, type: 'lesson' },
-      { id: 2, title: "Raisonnement déductif", description: "Tirer des conclusions logiques", completed: true, locked: false, type: 'lesson' },
+      { id: 'deductive-reasoning', title: "Raisonnement déductif", description: "Tirer des conclusions logiques", completed: false, locked: false, type: 'lesson' },
       { id: 'laser-maze', title: "Labyrinthe Laser", description: "Jeu de logique avec miroirs", completed: true, locked: false, type: 'game' },
       { id: 'tangram', title: "Tangram", description: "Puzzle de formes géométriques", completed: false, locked: false, type: 'game' },
-      { id: 5, title: "Théorie des ensembles", description: "Collections d'objets et relations", completed: false, locked: false, type: 'lesson' }
+      { id: 'set-theory', title: "Théorie des ensembles", description: "Collections d'objets et relations", completed: false, locked: false, type: 'lesson' }
     ],
     computer: [
       { id: 'computer-basics', title: "Bases de l'informatique", description: "Algorithmes et logique", completed: true, locked: false, type: 'lesson' },
-      { id: 2, title: "Variables et données", description: "Stocker et manipuler l'information", completed: true, locked: false, type: 'lesson' },
-      { id: 3, title: "Conditions", description: "Prendre des décisions en programmation", completed: true, locked: false, type: 'lesson' },
-      { id: 4, title: "Boucles", description: "Répéter des actions", completed: false, locked: false, type: 'lesson' },
-      { id: 5, title: "Fonctions", description: "Organiser le code en modules", completed: false, locked: false, type: 'lesson' }
+      { id: 'variables-data', title: "Variables et données", description: "Stocker et manipuler l'information", completed: false, locked: false, type: 'lesson' },
+      { id: 'conditions', title: "Conditions", description: "Prendre des décisions en programmation", completed: false, locked: false, type: 'lesson' },
+      { id: 'loops', title: "Boucles", description: "Répéter des actions", completed: false, locked: false, type: 'lesson' },
+      { id: 'functions', title: "Fonctions", description: "Organiser le code en modules", completed: false, locked: false, type: 'lesson' }
     ]
   };
 
