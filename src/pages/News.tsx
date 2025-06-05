@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useTheme } from "next-themes";
@@ -19,18 +20,8 @@ import {
   Anchor, 
   Rocket, 
   Layers,
-  ChevronLeft,
-  ChevronRight,
-  Star,
-  TrendingUp
+  Search
 } from "lucide-react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import NewsGameCard from "@/components/news/NewsGameCard";
 import Sudoku from "@/components/news/games/Sudoku";
 import Connections from "@/components/news/games/Connections";
@@ -47,6 +38,7 @@ interface NewsArticle {
   date: string;
   category: string;
   source: string;
+  featured?: boolean;
 }
 
 type ActiveGameType = "sudoku" | "connections" | "crosswords" | "wordle" | "space-elevator" | "deep-sea" | "internet-archives" | null;
@@ -63,61 +55,60 @@ const News = () => {
   const articles: NewsArticle[] = [
     {
       id: "1",
-      title: "Nouvelle découverte sur Mars",
-      content: "Des scientifiques de la NASA ont découvert de nouvelles preuves suggérant la présence d'eau liquide sous la surface martienne, renforçant l'hypothèse d'une vie microbienne potentielle.",
+      title: "Nouvelle découverte sur Mars révèle des traces d'eau",
+      content: "Des scientifiques de la NASA ont découvert de nouvelles preuves suggérant la présence d'eau liquide sous la surface martienne, renforçant l'hypothèse d'une vie microbienne potentielle. Cette découverte majeure pourrait révolutionner notre compréhension de la planète rouge.",
       image: "https://images.unsplash.com/photo-1614728894747-a83421789f10?auto=format&fit=crop&w=800",
-      date: "2025-05-01",
+      date: "il y a 2 heures",
       category: "space",
-      source: "Science Today"
+      source: "Science Today",
+      featured: true
     },
     {
       id: "2",
       title: "Avancée majeure en fusion nucléaire",
       content: "Des chercheurs du MIT ont réalisé une percée significative dans le domaine de la fusion nucléaire, atteignant un rendement net positif pendant plusieurs minutes, ouvrant la voie à une nouvelle ère énergétique.",
       image: "https://images.unsplash.com/photo-1580508244245-c466fefc9d60?auto=format&fit=crop&w=800",
-      date: "2025-04-28",
+      date: "il y a 5 heures",
       category: "energy",
       source: "Tech Review"
     },
     {
       id: "3",
       title: "Nouveau vaccin contre la tuberculose",
-      content: "Une équipe internationale de médecins a développé un vaccin prometteur contre la tuberculose, montrant une efficacité de 89% lors des essais cliniques de phase 3.",
+      content: "Une équipe internationale de médecins a développé un vaccin prometteur contre la tuberculose, montrant une efficacité de 89% lors des essais cliniques.",
       image: "https://images.unsplash.com/photo-1631549916768-4119b2e5f926?auto=format&fit=crop&w=800",
-      date: "2025-04-15",
+      date: "il y a 2 heures",
       category: "health",
       source: "Medical Journal"
     },
     {
       id: "4",
-      title: "Intelligence artificielle révolutionnant l'archéologie",
-      content: "Des archéologues utilisant des algorithmes d'IA ont découvert un réseau de cités mayas jusque-là inconnu en analysant des données LiDAR, révolutionnant notre compréhension de cette civilisation ancienne.",
+      title: "Intelligence artificielle révolutionne l'archéologie",
+      content: "Des archéologues utilisant des algorithmes d'IA ont découvert un réseau de cités mayas jusque-là inconnu.",
       image: "https://images.unsplash.com/photo-1588428608577-71d0290a3f50?auto=format&fit=crop&w=800",
-      date: "2025-04-10",
+      date: "il y a 3 heures",
       category: "archaeology",
       source: "History Channel"
     },
     {
       id: "5",
       title: "Projet de reforestation massive en Amazonie",
-      content: "Une initiative internationale lance un ambitieux projet de reforestation en Amazonie, visant à planter plus de 100 millions d'arbres sur cinq ans pour lutter contre le changement climatique.",
+      content: "Initiative internationale pour planter plus de 100 millions d'arbres sur cinq ans.",
       image: "https://images.unsplash.com/photo-1586176930729-e0c48ae5a384?auto=format&fit=crop&w=800",
-      date: "2025-03-22",
+      date: "il y a 2 heures",
       category: "environment",
       source: "Green Earth"
     },
     {
       id: "6",
       title: "Percée en informatique quantique",
-      content: "Google annonce une avancée majeure dans l'informatique quantique avec son nouveau processeur qui pourrait révolutionner le calcul complexe.",
+      content: "Google annonce une avancée majeure avec son nouveau processeur quantique.",
       image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800",
-      date: "2025-05-10",
+      date: "il y a 2 heures",
       category: "technology",
       source: "Quantum Today"
     }
   ];
-
-  const featuredArticles = articles.slice(0, 3);
 
   const handleCiteSource = (source: string) => {
     navigator.clipboard.writeText(`Source: ${source}`);
@@ -272,44 +263,30 @@ const News = () => {
         return null;
     }
   };
+
+  const featuredArticle = articles.find(article => article.featured);
+  const regularArticles = articles.filter(article => !article.featured);
   
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 py-12 px-4 md:px-8">
-      <div className="container mx-auto max-w-7xl">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-800 dark:text-white font-serif mb-4">
-            {t('news.title')}
-          </h1>
-          <p className="text-gray-600 dark:text-gray-300 text-xl max-w-3xl mx-auto">
-            {t('news.subtitle')}
-          </p>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="container mx-auto max-w-7xl px-4 py-8">
+        {/* Header avec recherche */}
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-4xl font-bold text-teal-600 dark:text-teal-400">ACTUS</h1>
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" className="text-gray-600 dark:text-gray-300">Une</Button>
+            <Button variant="ghost" className="text-gray-600 dark:text-gray-300">Catégorie</Button>
+            <Button variant="ghost" className="text-gray-600 dark:text-gray-300">Catégorie</Button>
+            <Button variant="ghost" size="icon" className="text-gray-600 dark:text-gray-300">
+              <Search className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
         
         {activeGame ? (
           renderActiveGame()
         ) : (
           <>
-            {/* Carrousel d'articles à la une */}
-            <section className="mb-16">
-              <div className="flex items-center gap-3 mb-8">
-                <Star className="h-7 w-7 text-yellow-500" />
-                <h2 className="text-3xl font-bold text-gray-800 dark:text-white">À la une</h2>
-                <TrendingUp className="h-6 w-6 text-green-500" />
-              </div>
-              
-              <Carousel className="w-full" opts={{ align: "start", loop: true }}>
-                <CarouselContent>
-                  {featuredArticles.map((article) => (
-                    <CarouselItem key={article.id} className="md:basis-1/2 lg:basis-1/3">
-                      <FeaturedNewsCard article={article} onClick={() => setOpenArticle(article)} />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="hidden md:flex -left-12" />
-                <CarouselNext className="hidden md:flex -right-12" />
-              </Carousel>
-            </section>
-
             <Tabs defaultValue="all" className="w-full">
               <TabsList className="w-full bg-gray-100 dark:bg-gray-800 mb-8 grid grid-cols-5">
                 <TabsTrigger value="all" className="flex-1">
@@ -330,20 +307,37 @@ const News = () => {
               </TabsList>
               
               <TabsContent value="all" className="animate-fade-in">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {articles.map((article) => (
-                    <NewsCard key={article.id} article={article} onClick={() => setOpenArticle(article)} />
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Article principal */}
+                  {featuredArticle && (
+                    <div className="lg:col-span-2">
+                      <FeaturedNewsCard article={featuredArticle} onClick={() => setOpenArticle(featuredArticle)} />
+                    </div>
+                  )}
+                  
+                  {/* Articles secondaires */}
+                  <div className="space-y-4">
+                    {regularArticles.slice(0, 3).map((article) => (
+                      <SmallNewsCard key={article.id} article={article} onClick={() => setOpenArticle(article)} />
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Grille d'articles supplémentaires */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                  {regularArticles.slice(3).map((article) => (
+                    <RegularNewsCard key={article.id} article={article} onClick={() => setOpenArticle(article)} />
                   ))}
                 </div>
               </TabsContent>
               
               {["space", "health", "environment"].map((category) => (
                 <TabsContent key={category} value={category} className="animate-fade-in">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {articles
                       .filter(article => article.category === category)
                       .map((article) => (
-                        <NewsCard key={article.id} article={article} onClick={() => setOpenArticle(article)} />
+                        <RegularNewsCard key={article.id} article={article} onClick={() => setOpenArticle(article)} />
                       ))}
                   </div>
                 </TabsContent>
@@ -409,7 +403,7 @@ const News = () => {
   );
 };
 
-// Featured News Card Component for Carousel
+// Article principal en vedette
 interface FeaturedNewsCardProps {
   article: NewsArticle;
   onClick: () => void;
@@ -425,16 +419,11 @@ const FeaturedNewsCard = ({ article, onClick }: FeaturedNewsCardProps) => {
         <img 
           src={article.image} 
           alt={article.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-          <div className="mb-2">
-            <span className="inline-block px-3 py-1 bg-blue-600 text-white text-xs font-semibold rounded-full">
-              {article.category}
-            </span>
-          </div>
-          <h3 className="text-xl font-bold mb-3 line-clamp-2">{article.title}</h3>
+          <h3 className="text-2xl font-bold mb-3 line-clamp-2">{article.title}</h3>
           <p className="text-sm text-gray-300 line-clamp-2 mb-3">{article.content}</p>
           <div className="flex justify-between items-center text-xs text-gray-400">
             <span>{article.date}</span>
@@ -446,16 +435,47 @@ const FeaturedNewsCard = ({ article, onClick }: FeaturedNewsCardProps) => {
   );
 };
 
-// News Card Component
-interface NewsCardProps {
+// Carte d'article petite pour la sidebar
+interface SmallNewsCardProps {
   article: NewsArticle;
   onClick: () => void;
 }
 
-const NewsCard = ({ article, onClick }: NewsCardProps) => {
+const SmallNewsCard = ({ article, onClick }: SmallNewsCardProps) => {
   return (
     <Card 
-      className="border bg-white dark:bg-gray-800 cursor-pointer hover:shadow-xl transition-all duration-300 overflow-hidden group"
+      className="border bg-white dark:bg-gray-800 cursor-pointer hover:shadow-md transition-all duration-300 overflow-hidden group"
+      onClick={onClick}
+    >
+      <div className="flex">
+        <div className="w-24 h-16 relative overflow-hidden flex-shrink-0">
+          <img 
+            src={article.image} 
+            alt={article.title}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" 
+          />
+        </div>
+        <div className="p-3 flex-1">
+          <h4 className="text-sm font-bold text-gray-800 dark:text-gray-200 line-clamp-2 mb-1">{article.title}</h4>
+          <div className="flex justify-between items-center text-xs text-gray-500">
+            <span>{article.date}</span>
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+};
+
+// Carte d'article régulière
+interface RegularNewsCardProps {
+  article: NewsArticle;
+  onClick: () => void;
+}
+
+const RegularNewsCard = ({ article, onClick }: RegularNewsCardProps) => {
+  return (
+    <Card 
+      className="border bg-white dark:bg-gray-800 cursor-pointer hover:shadow-md transition-all duration-300 overflow-hidden group"
       onClick={onClick}
     >
       <div className="h-48 relative overflow-hidden">
@@ -464,23 +484,15 @@ const NewsCard = ({ article, onClick }: NewsCardProps) => {
           alt={article.title}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" 
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-        <div className="absolute top-3 left-3">
-          <span className="inline-block px-2 py-1 bg-white/90 text-gray-800 text-xs font-semibold rounded">
-            {article.category}
-          </span>
-        </div>
-        <div className="absolute bottom-3 left-3 right-3">
-          <h3 className="text-lg font-bold text-white line-clamp-2">{article.title}</h3>
-        </div>
       </div>
-      <CardContent className="pt-4">
-        <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3">{article.content}</p>
+      <CardContent className="p-4">
+        <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200 line-clamp-2 mb-2">{article.title}</h3>
+        <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-3">{article.content}</p>
+        <div className="flex justify-between items-center text-xs text-gray-500">
+          <span>{article.date}</span>
+          <span className="text-blue-600 dark:text-blue-400 font-medium">{article.source}</span>
+        </div>
       </CardContent>
-      <CardFooter className="flex justify-between">
-        <span className="text-xs text-gray-500">{article.date}</span>
-        <span className="text-xs text-blue-600 dark:text-blue-400 font-medium">{article.source}</span>
-      </CardFooter>
     </Card>
   );
 };
