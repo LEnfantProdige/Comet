@@ -10,7 +10,6 @@ import Index from "./pages/Index";
 import PeriodDetail from "./pages/PeriodDetail";
 import CourseDetail from "./pages/CourseDetail";
 import QuizPage from "./pages/QuizPage";
-import Science from "./pages/Science";
 import Eclaire from "./pages/Eclaire";
 import Account from "./pages/Account";
 import News from "./pages/News";
@@ -32,13 +31,12 @@ const App = () => (
               <div className="flex-grow">
                 <Routes>
                   <Route path="/" element={<Index />} />
+                  <Route path="/comete" element={<Eclaire />} />
                   <Route path="/period/:periodId" element={<PeriodDetail />} />
                   <Route path="/period/:periodId/course/:courseId" element={<CourseDetail />} />
                   <Route path="/period/:periodId/course/:courseId/quiz" element={<QuizPage />} />
-                  <Route path="/science" element={<Science />} />
-                  <Route path="/science/eclaire" element={<Eclaire />} />
-                  <Route path="/account" element={<Account />} />
                   <Route path="/news" element={<News />} />
+                  <Route path="/account" element={<Account />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </div>

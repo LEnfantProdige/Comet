@@ -23,7 +23,9 @@ import {
   Check,
   Lock,
   Gamepad2,
-  Shapes
+  Shapes,
+  Newspaper,
+  Clock
 } from "lucide-react";
 
 // Import des composants de leçons
@@ -92,6 +94,26 @@ const Eclaire = () => {
       progress: 60,
       lessons: 5,
       completed: 3
+    },
+    {
+      id: 'history',
+      title: 'Histoire',
+      description: 'Périodes historiques et civilisations',
+      icon: <BookOpen className="h-8 w-8" />,
+      color: 'bg-amber-500',
+      progress: 40,
+      lessons: 8,
+      completed: 3
+    },
+    {
+      id: 'news',
+      title: 'Actualités',
+      description: 'Sciences, découvertes et actualités',
+      icon: <Newspaper className="h-8 w-8" />,
+      color: 'bg-blue-500',
+      progress: 20,
+      lessons: 6,
+      completed: 1
     }
   ];
 
@@ -124,6 +146,24 @@ const Eclaire = () => {
       { id: 'conditions', title: "Conditions", description: "Prendre des décisions en programmation", completed: false, locked: false, type: 'lesson' },
       { id: 'loops', title: "Boucles", description: "Répéter des actions", completed: false, locked: false, type: 'lesson' },
       { id: 'functions', title: "Fonctions", description: "Organiser le code en modules", completed: false, locked: false, type: 'lesson' }
+    ],
+    history: [
+      { id: 'ancient-egypt', title: "Égypte Antique", description: "Pharaons et pyramides", completed: true, locked: false, type: 'lesson' },
+      { id: 'ancient-greece', title: "Grèce Antique", description: "Démocratie et philosophie", completed: false, locked: false, type: 'lesson' },
+      { id: 'roman-empire', title: "Empire Romain", description: "Conquêtes et civilisation", completed: false, locked: false, type: 'lesson' },
+      { id: 'middle-ages', title: "Moyen Âge", description: "Chevaliers et châteaux", completed: false, locked: false, type: 'lesson' },
+      { id: 'renaissance', title: "Renaissance", description: "Art et découvertes", completed: false, locked: false, type: 'lesson' },
+      { id: 'industrial-revolution', title: "Révolution Industrielle", description: "Machines et changements", completed: false, locked: false, type: 'lesson' },
+      { id: 'world-wars', title: "Guerres Mondiales", description: "Histoire du 20e siècle", completed: false, locked: false, type: 'lesson' },
+      { id: 'modern-era', title: "Ère Moderne", description: "De 1945 à aujourd'hui", completed: false, locked: false, type: 'lesson' }
+    ],
+    news: [
+      { id: 'space-discoveries', title: "Découvertes Spatiales", description: "Exploration de l'univers", completed: true, locked: false, type: 'lesson' },
+      { id: 'climate-change', title: "Changement Climatique", description: "Sciences environnementales", completed: false, locked: false, type: 'lesson' },
+      { id: 'medical-breakthroughs', title: "Avancées Médicales", description: "Nouvelles technologies de santé", completed: false, locked: false, type: 'lesson' },
+      { id: 'ai-technology', title: "Intelligence Artificielle", description: "IA et société", completed: false, locked: false, type: 'lesson' },
+      { id: 'renewable-energy', title: "Énergies Renouvelables", description: "Transition énergétique", completed: false, locked: false, type: 'lesson' },
+      { id: 'biotechnology', title: "Biotechnologie", description: "Manipulation du vivant", completed: false, locked: false, type: 'lesson' }
     ]
   };
 
@@ -136,8 +176,8 @@ const Eclaire = () => {
       completed: false
     },
     {
-      title: "Le mouvement",
-      subject: "Physique", 
+      title: "Découvertes spatiales",
+      subject: "Actualités", 
       duration: "7 min",
       xp: 20,
       completed: false
@@ -155,7 +195,7 @@ const Eclaire = () => {
     { name: "Premier pas", icon: "🎯", earned: true },
     { name: "Série de 5 jours", icon: "🔥", earned: true },
     { name: "Expert en maths", icon: "📐", earned: true },
-    { name: "Physicien en herbe", icon: "⚡", earned: false }
+    { name: "Historien en herbe", icon: "📚", earned: false }
   ];
 
   const handleLessonComplete = (xp: number) => {
@@ -241,7 +281,7 @@ const Eclaire = () => {
                 <h2 className="text-2xl font-bold mb-2">Leçon interactive</h2>
                 <p className="text-gray-600">
                   Cette fonctionnalité sera bientôt disponible ! 
-                  Les leçons interactives d'Éclaire offriront des explications visuelles, 
+                  Les leçons interactives de Comète offriront des explications visuelles, 
                   des quiz et des exercices pratiques.
                 </p>
               </div>
@@ -413,11 +453,11 @@ const Eclaire = () => {
         <div className="flex justify-between items-center mb-8">
           <Button 
             variant="ghost" 
-            onClick={() => navigate("/science")}
+            onClick={() => navigate("/")}
             className="flex items-center gap-2"
           >
             <ArrowLeft className="h-4 w-4" />
-            Retour aux Sciences
+            Retour à l'accueil
           </Button>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 text-orange-500">
@@ -439,11 +479,10 @@ const Eclaire = () => {
             </div>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-green-600 mb-4">
-            Éclaire
+            Comète
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Apprends les sciences de manière interactive et engageante. 
-            Mathématiques, physique, logique et informatique à ton rythme.
+            Plateforme d'apprentissage interactive - Sciences, Histoire, Actualités et bien plus !
           </p>
         </div>
 

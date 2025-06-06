@@ -1,39 +1,122 @@
 
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { historicalPeriods } from "../data/historyData";
 import PeriodCard from "../components/PeriodCard";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Sparkles, BookOpen, Brain, Zap, Target } from "lucide-react";
 
 const Index = () => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Effet de chargement pour l'animation
     setIsLoaded(true);
   }, []);
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Bannière héro */}
-      <header className="bg-histoire-bordeaux text-white py-16 px-4 relative overflow-hidden">
+      {/* Hero Section avec Comète */}
+      <header className="bg-gradient-to-br from-emerald-900 via-teal-700 to-green-700 text-white py-20 px-4 relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('/placeholder.svg')] opacity-10 bg-cover bg-center" />
-        <div className="container mx-auto relative z-10">
-          <h1 className={`text-4xl sm:text-5xl md:text-6xl font-serif font-bold mb-4 transition-all duration-700 ${
+        <div className="container mx-auto relative z-10 text-center">
+          <div className="flex justify-center mb-6">
+            <div className="bg-gradient-to-r from-emerald-400 to-teal-400 p-4 rounded-full">
+              <Sparkles className="h-16 w-16 text-white" />
+            </div>
+          </div>
+          <h1 className={`text-5xl md:text-7xl font-bold mb-6 transition-all duration-700 ${
             isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
           }`}>
-            HistoVoyage
+            Comète
           </h1>
-          <p className={`text-xl md:text-2xl max-w-2xl transition-all duration-700 delay-300 ${
+          <p className={`text-xl md:text-2xl max-w-3xl mx-auto mb-8 transition-all duration-700 delay-300 ${
             isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
           }`}>
-            Voyagez à travers le temps et explorez l'histoire de façon ludique et interactive
+            Plateforme d'apprentissage interactive - Histoire, Sciences, Actualités et bien plus !
           </p>
+          <div className={`flex flex-col sm:flex-row gap-4 justify-center transition-all duration-700 delay-500 ${
+            isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+          }`}>
+            <Button 
+              size="lg" 
+              onClick={() => navigate("/comete")}
+              className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-3 text-lg"
+            >
+              <Sparkles className="mr-2 h-5 w-5" />
+              Commencer à apprendre
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline"
+              className="bg-white/10 border-white/30 text-white hover:bg-white/20 px-8 py-3 text-lg"
+            >
+              <BookOpen className="mr-2 h-5 w-5" />
+              Explorer l'histoire
+            </Button>
+          </div>
         </div>
       </header>
 
-      {/* Section principale avec les périodes historiques */}
-      <main className="container mx-auto px-4 py-12">
-        <section className="mb-12">
-          <h2 className="font-serif text-3xl font-bold mb-8 text-center">Périodes Historiques</h2>
+      {/* Fonctionnalités principales */}
+      <section className="py-16 px-4 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-gray-900 dark:to-emerald-900">
+        <div className="container mx-auto max-w-6xl">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-800 dark:text-gray-100">
+            Pourquoi choisir Comète ?
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="text-center p-6 hover:shadow-lg transition-shadow">
+              <CardContent className="pt-6">
+                <div className="bg-gradient-to-r from-emerald-500 to-teal-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Brain className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold mb-3">Apprentissage Interactif</h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Des leçons engageantes avec des quiz, des jeux et des défis pour rendre l'apprentissage amusant.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="text-center p-6 hover:shadow-lg transition-shadow">
+              <CardContent className="pt-6">
+                <div className="bg-gradient-to-r from-teal-500 to-green-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Zap className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold mb-3">Progression Personnalisée</h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Suivez vos progrès, gagnez de l'XP et débloquez de nouveaux contenus à votre rythme.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="text-center p-6 hover:shadow-lg transition-shadow">
+              <CardContent className="pt-6">
+                <div className="bg-gradient-to-r from-green-500 to-emerald-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Target className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold mb-3">Multidisciplinaire</h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Histoire, sciences, mathématiques, logique - tout en un seul endroit pour un apprentissage complet.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Section Histoire */}
+      <main className="container mx-auto px-4 py-16">
+        <section className="mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-800 dark:text-gray-100">
+              Explorez l'Histoire
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              Voyagez à travers les époques et découvrez les événements qui ont façonné notre monde
+            </p>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {historicalPeriods.map((period) => (
               <PeriodCard key={period.id} period={period} />
@@ -41,53 +124,22 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Section de fonctionnalités */}
-        <section className="py-12 bg-histoire-parchemin rounded-lg p-8">
-          <h2 className="font-serif text-3xl font-bold mb-8 text-center">Pourquoi HistoVoyage?</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-6">
-              <div className="bg-histoire-bleu-royal w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-8 h-8 text-white">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-              </div>
-              <h3 className="font-serif text-xl font-bold mb-2">Mini-cours Concis</h3>
-              <p className="text-sm">Des leçons de 5 à 10 minutes, parfaites pour apprendre à votre rythme.</p>
-            </div>
-            
-            <div className="text-center p-6">
-              <div className="bg-histoire-bordeaux w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-8 h-8 text-white">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                </svg>
-              </div>
-              <h3 className="font-serif text-xl font-bold mb-2">Quiz Interactifs</h3>
-              <p className="text-sm">Testez vos connaissances avec des quiz variés et gagnez des badges.</p>
-            </div>
-            
-            <div className="text-center p-6">
-              <div className="bg-histoire-or w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-8 h-8 text-black">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </div>
-              <h3 className="font-serif text-xl font-bold mb-2">Progression Personnalisée</h3>
-              <p className="text-sm">Suivez votre progression et apprenez à votre rythme.</p>
-            </div>
-          </div>
+        {/* Call to Action */}
+        <section className="text-center bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl p-12 text-white">
+          <h2 className="text-3xl font-bold mb-4">Prêt à commencer votre voyage d'apprentissage ?</h2>
+          <p className="text-lg mb-8 opacity-90">
+            Rejoignez des milliers d'apprenants qui explorent déjà l'univers avec Comète
+          </p>
+          <Button 
+            size="lg" 
+            onClick={() => navigate("/comete")}
+            className="bg-white text-emerald-600 hover:bg-gray-100 px-8 py-3 text-lg font-semibold"
+          >
+            <Sparkles className="mr-2 h-5 w-5" />
+            Lancer Comète
+          </Button>
         </section>
       </main>
-
-      {/* Pied de page */}
-      <footer className="bg-histoire-bleu-royal text-white py-8 px-4">
-        <div className="container mx-auto">
-          <div className="text-center">
-            <h2 className="font-serif text-2xl mb-4">HistoVoyage</h2>
-            <p className="text-sm opacity-80">© 2025 HistoVoyage - Tous droits réservés</p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };

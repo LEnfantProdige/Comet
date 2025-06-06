@@ -12,7 +12,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle
 } from "@/components/ui/navigation-menu";
-import { Atom, BookOpen, User, Rocket } from "lucide-react";
+import { Sparkles, BookOpen, User, Newspaper, GraduationCap } from "lucide-react";
 
 export default function Header() {
   const { t } = useLanguage();
@@ -26,13 +26,11 @@ export default function Header() {
             className="flex items-center gap-2 cursor-pointer" 
             onClick={() => navigate("/")}
           >
-            <img 
-              src="/logo.png" 
-              alt="HistoVoyage" 
-              className="h-10 w-10" 
-            />
-            <h1 className="text-xl md:text-2xl font-serif font-bold text-histoire-bordeaux dark:text-histoire-or">
-              {t('app.title')}
+            <div className="bg-gradient-to-r from-emerald-500 to-teal-500 p-2 rounded-full">
+              <Sparkles className="h-6 w-6 text-white" />
+            </div>
+            <h1 className="text-xl md:text-2xl font-serif font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600">
+              Comète
             </h1>
           </div>
           
@@ -41,19 +39,19 @@ export default function Header() {
               <NavigationMenuItem>
                 <NavigationMenuLink 
                   className={navigationMenuTriggerStyle()} 
-                  onClick={() => navigate("/")}
+                  onClick={() => navigate("/comete")}
                 >
-                  <BookOpen className="mr-2 h-4 w-4" />
-                  {t('explore')}
+                  <GraduationCap className="mr-2 h-4 w-4" />
+                  Apprendre
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink 
                   className={navigationMenuTriggerStyle()} 
-                  onClick={() => navigate("/science")}
+                  onClick={() => navigate("/")}
                 >
-                  <Atom className="mr-2 h-4 w-4" />
-                  {t('science')}
+                  <BookOpen className="mr-2 h-4 w-4" />
+                  Histoire
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
@@ -61,8 +59,8 @@ export default function Header() {
                   className={navigationMenuTriggerStyle()} 
                   onClick={() => navigate("/news")}
                 >
-                  <Rocket className="mr-2 h-4 w-4" />
-                  {t('news')}
+                  <Newspaper className="mr-2 h-4 w-4" />
+                  Actualités
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
@@ -71,7 +69,7 @@ export default function Header() {
                   onClick={() => navigate("/account")}
                 >
                   <User className="mr-2 h-4 w-4" />
-                  {t('account')}
+                  Compte
                 </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>
