@@ -1,9 +1,7 @@
-
 import React, { useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useTheme } from "next-themes";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
@@ -287,113 +285,79 @@ const News = () => {
           renderActiveGame()
         ) : (
           <>
-            <Tabs defaultValue="all" className="w-full">
-              <TabsList className="w-full bg-gray-100 dark:bg-gray-800 mb-8 grid grid-cols-5">
-                <TabsTrigger value="all" className="flex-1">
-                  {t('news.categories.all')}
-                </TabsTrigger>
-                <TabsTrigger value="space" className="flex-1">
-                  {t('news.categories.space')}
-                </TabsTrigger>
-                <TabsTrigger value="health" className="flex-1">
-                  {t('news.categories.health')}
-                </TabsTrigger>
-                <TabsTrigger value="environment" className="flex-1">
-                  {t('news.categories.environment')}
-                </TabsTrigger>
-                <TabsTrigger value="games" className="flex-1">
-                  {t('news.categories.games')}
-                </TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="all" className="animate-fade-in">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  {/* Article principal */}
-                  {featuredArticle && (
-                    <div className="lg:col-span-2">
-                      <FeaturedNewsCard article={featuredArticle} onClick={() => setOpenArticle(featuredArticle)} />
-                    </div>
-                  )}
-                  
-                  {/* Articles secondaires */}
-                  <div className="space-y-4">
-                    {regularArticles.slice(0, 3).map((article) => (
-                      <SmallNewsCard key={article.id} article={article} onClick={() => setOpenArticle(article)} />
-                    ))}
-                  </div>
+            {/* Grille d'articles principales */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+              {/* Article principal */}
+              {featuredArticle && (
+                <div className="lg:col-span-2">
+                  <FeaturedNewsCard article={featuredArticle} onClick={() => setOpenArticle(featuredArticle)} />
                 </div>
-                
-                {/* Grille d'articles supplémentaires */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-                  {regularArticles.slice(3).map((article) => (
-                    <RegularNewsCard key={article.id} article={article} onClick={() => setOpenArticle(article)} />
-                  ))}
-                </div>
-              </TabsContent>
+              )}
               
-              {["space", "health", "environment"].map((category) => (
-                <TabsContent key={category} value={category} className="animate-fade-in">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {articles
-                      .filter(article => article.category === category)
-                      .map((article) => (
-                        <RegularNewsCard key={article.id} article={article} onClick={() => setOpenArticle(article)} />
-                      ))}
-                  </div>
-                </TabsContent>
+              {/* Articles secondaires */}
+              <div className="space-y-4">
+                {regularArticles.slice(0, 3).map((article) => (
+                  <SmallNewsCard key={article.id} article={article} onClick={() => setOpenArticle(article)} />
+                ))}
+              </div>
+            </div>
+            
+            {/* Grille d'articles supplémentaires */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {regularArticles.slice(3).map((article) => (
+                <RegularNewsCard key={article.id} article={article} onClick={() => setOpenArticle(article)} />
               ))}
-              
-              {/* Games Tab */}
-              <TabsContent value="games" className="animate-fade-in">
-                <div className="max-w-4xl mx-auto">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <NewsGameCard 
-                      title={t('games.sudoku')}
-                      description={t('games.sudoku.description')}
-                      icon={<Grid2X2 size={32} />}
-                      onClick={() => setActiveGame("sudoku")}
-                    />
-                    <NewsGameCard 
-                      title={t('games.connections')}
-                      description={t('games.connections.description')}
-                      icon={<Timer size={32} />}
-                      onClick={() => setActiveGame("connections")}
-                    />
-                    <NewsGameCard 
-                      title={t('games.wordle')}
-                      description={t('games.wordle.description')}
-                      icon={<Keyboard size={32} />}
-                      onClick={() => setActiveGame("wordle")}
-                    />
-                    <NewsGameCard 
-                      title={t('games.crosswords')}
-                      description={t('games.crosswords.description')}
-                      icon={<SquareX size={32} />}
-                      onClick={() => setActiveGame("crosswords")}
-                    />
-                    <NewsGameCard 
-                      title={t('games.deepsea')}
-                      description={t('games.deepsea.description')}
-                      icon={<Anchor size={32} />}
-                      onClick={() => setActiveGame("deep-sea")}
-                    />
-                    <NewsGameCard 
-                      title={t('games.space')}
-                      description={t('games.space.description')}
-                      icon={<Rocket size={32} />}
-                      onClick={() => setActiveGame("space-elevator")}
-                    />
-                    <NewsGameCard 
-                      title={t('games.internetarchives')}
-                      description={t('games.internetarchives.description')}
-                      icon={<Layers size={32} />}
-                      onClick={() => setActiveGame("internet-archives")}
-                      comingSoon={true}
-                    />
-                  </div>
-                </div>
-              </TabsContent>
-            </Tabs>
+            </div>
+
+            {/* Section Jeux */}
+            <div className="mt-12">
+              <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100">Jeux & Expériences</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <NewsGameCard 
+                  title={t('games.sudoku')}
+                  description={t('games.sudoku.description')}
+                  icon={<Grid2X2 size={32} />}
+                  onClick={() => setActiveGame("sudoku")}
+                />
+                <NewsGameCard 
+                  title={t('games.connections')}
+                  description={t('games.connections.description')}
+                  icon={<Timer size={32} />}
+                  onClick={() => setActiveGame("connections")}
+                />
+                <NewsGameCard 
+                  title={t('games.wordle')}
+                  description={t('games.wordle.description')}
+                  icon={<Keyboard size={32} />}
+                  onClick={() => setActiveGame("wordle")}
+                />
+                <NewsGameCard 
+                  title={t('games.crosswords')}
+                  description={t('games.crosswords.description')}
+                  icon={<SquareX size={32} />}
+                  onClick={() => setActiveGame("crosswords")}
+                />
+                <NewsGameCard 
+                  title={t('games.deepsea')}
+                  description={t('games.deepsea.description')}
+                  icon={<Anchor size={32} />}
+                  onClick={() => setActiveGame("deep-sea")}
+                />
+                <NewsGameCard 
+                  title={t('games.space')}
+                  description={t('games.space.description')}
+                  icon={<Rocket size={32} />}
+                  onClick={() => setActiveGame("space-elevator")}
+                />
+                <NewsGameCard 
+                  title={t('games.internetarchives')}
+                  description={t('games.internetarchives.description')}
+                  icon={<Layers size={32} />}
+                  onClick={() => setActiveGame("internet-archives")}
+                  comingSoon={true}
+                />
+              </div>
+            </div>
           </>
         )}
       </div>
