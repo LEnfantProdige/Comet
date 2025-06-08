@@ -25,7 +25,8 @@ import {
   Gamepad2,
   Shapes,
   Newspaper,
-  Clock
+  Clock,
+  Bus
 } from "lucide-react";
 
 // Import des composants de leçons
@@ -40,6 +41,7 @@ import DivisionLesson from "@/components/eclaire/DivisionLesson";
 import FractionsLesson from "@/components/eclaire/FractionsLesson";
 import TangramGame from "@/components/eclaire/TangramGame";
 import AdvancedGeometryLesson from "@/components/eclaire/AdvancedGeometryLesson";
+import BusOutGame from "@/components/eclaire/BusOutGame";
 
 const Eclaire = () => {
   const { t } = useLanguage();
@@ -82,7 +84,7 @@ const Eclaire = () => {
       icon: <Brain className="h-8 w-8" />,
       color: 'bg-teal-500',
       progress: 80,
-      lessons: 5,
+      lessons: 6,
       completed: 4
     },
     {
@@ -138,6 +140,7 @@ const Eclaire = () => {
       { id: 'deductive-reasoning', title: "Raisonnement déductif", description: "Tirer des conclusions logiques", completed: false, locked: false, type: 'lesson' },
       { id: 'laser-maze', title: "Labyrinthe Laser", description: "Jeu de logique avec miroirs", completed: true, locked: false, type: 'game' },
       { id: 'tangram', title: "Tangram", description: "Puzzle de formes géométriques", completed: false, locked: false, type: 'game' },
+      { id: 'bus-out', title: "Bus Out", description: "Puzzle de parking avec bus", completed: false, locked: false, type: 'game' },
       { id: 'set-theory', title: "Théorie des ensembles", description: "Collections d'objets et relations", completed: false, locked: false, type: 'lesson' }
     ],
     computer: [
@@ -251,6 +254,10 @@ const Eclaire = () => {
     return <AdvancedGeometryLesson onBack={() => setActiveComponent(null)} onComplete={handleLessonComplete} />;
   }
 
+  if (activeComponent === 'bus-out') {
+    return <BusOutGame onBack={() => setActiveComponent(null)} onComplete={handleLessonComplete} />;
+  }
+
   if (selectedLesson) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-100 dark:from-gray-900 dark:to-emerald-900 py-8 px-4">
@@ -334,7 +341,7 @@ const Eclaire = () => {
                   }`}
                   onClick={() => {
                     if (!lesson.locked) {
-                      if (typeof lesson.id === 'string' && ['algebra', 'laser-maze', 'geometry', 'arithmetic', 'physics-basics', 'computer-basics', 'logic-basics', 'division', 'fractions', 'tangram', 'advanced-geometry'].includes(lesson.id)) {
+                      if (typeof lesson.id === 'string' && ['algebra', 'laser-maze', 'geometry', 'arithmetic', 'physics-basics', 'computer-basics', 'logic-basics', 'division', 'fractions', 'tangram', 'advanced-geometry', 'bus-out'].includes(lesson.id)) {
                         setActiveComponent(lesson.id);
                       } else {
                         setSelectedLesson(lesson.id.toString());
@@ -356,7 +363,7 @@ const Eclaire = () => {
                         ) : lesson.locked ? (
                           <Lock className="h-5 w-5" />
                         ) : lesson.type === 'game' ? (
-                          <Gamepad2 className="h-5 w-5" />
+                          lesson.id === 'bus-out' ? <Bus className="h-5 w-5" /> : <Gamepad2 className="h-5 w-5" />
                         ) : lesson.type === 'lesson' && typeof lesson.id === 'string' ? (
                           <Shapes className="h-5 w-5" />
                         ) : (
@@ -423,7 +430,7 @@ const Eclaire = () => {
                             size="sm" 
                             className="w-full bg-emerald-500 hover:bg-emerald-600"
                             onClick={() => {
-                              if (typeof nextLesson.id === 'string' && ['algebra', 'laser-maze', 'geometry', 'arithmetic', 'physics-basics', 'computer-basics', 'logic-basics', 'division', 'fractions', 'tangram', 'advanced-geometry'].includes(nextLesson.id)) {
+                              if (typeof nextLesson.id === 'string' && ['algebra', 'laser-maze', 'geometry', 'arithmetic', 'physics-basics', 'computer-basics', 'logic-basics', 'division', 'fractions', 'tangram', 'advanced-geometry', 'bus-out'].includes(nextLesson.id)) {
                                 setActiveComponent(nextLesson.id);
                               } else {
                                 setSelectedLesson(nextLesson.id.toString());
