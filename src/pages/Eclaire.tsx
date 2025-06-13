@@ -26,7 +26,8 @@ import {
   Shapes,
   Newspaper,
   Clock,
-  Bus
+  Bus,
+  Crown
 } from "lucide-react";
 
 // Import des composants de leçons
@@ -43,6 +44,7 @@ import TangramGame from "@/components/eclaire/TangramGame";
 import AdvancedGeometryLesson from "@/components/eclaire/AdvancedGeometryLesson";
 import BusOutGame from "@/components/eclaire/BusOutGame";
 import AlchimistCraft from "@/components/eclaire/AlchimistCraft";
+import ChessGame from "@/components/eclaire/ChessGame";
 
 const Eclaire = () => {
   const { t } = useLanguage();
@@ -138,6 +140,7 @@ const Eclaire = () => {
     ],
     logic: [
       { id: 'logic-basics', title: "Logique de base", description: "Raisonnement et déduction", completed: true, locked: false, type: 'lesson' },
+      { id: 'chess', title: "École d'Échecs", description: "Cours, entraînement et parties", completed: false, locked: false, type: 'game' },
       { id: 'deductive-reasoning', title: "Raisonnement déductif", description: "Tirer des conclusions logiques", completed: false, locked: false, type: 'lesson' },
       { id: 'laser-maze', title: "Labyrinthe Laser", description: "Jeu de logique avec miroirs", completed: true, locked: false, type: 'game' },
       { id: 'tangram', title: "Tangram", description: "Puzzle de formes géométriques", completed: false, locked: false, type: 'game' },
@@ -264,6 +267,10 @@ const Eclaire = () => {
     return <AlchimistCraft onBack={() => setActiveComponent(null)} onComplete={handleLessonComplete} />;
   }
 
+  if (activeComponent === 'chess') {
+    return <ChessGame onBack={() => setActiveComponent(null)} onComplete={handleLessonComplete} />;
+  }
+
   if (selectedLesson) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-100 dark:from-gray-900 dark:to-emerald-900 py-8 px-4">
@@ -347,7 +354,7 @@ const Eclaire = () => {
                   }`}
                   onClick={() => {
                     if (!lesson.locked) {
-                      if (typeof lesson.id === 'string' && ['algebra', 'laser-maze', 'geometry', 'arithmetic', 'physics-basics', 'computer-basics', 'logic-basics', 'division', 'fractions', 'tangram', 'advanced-geometry', 'bus-out', 'alchimist-craft'].includes(lesson.id)) {
+                      if (typeof lesson.id === 'string' && ['algebra', 'laser-maze', 'geometry', 'arithmetic', 'physics-basics', 'computer-basics', 'logic-basics', 'division', 'fractions', 'tangram', 'advanced-geometry', 'bus-out', 'alchimist-craft', 'chess'].includes(lesson.id)) {
                         setActiveComponent(lesson.id);
                       } else {
                         setSelectedLesson(lesson.id.toString());
@@ -371,6 +378,7 @@ const Eclaire = () => {
                         ) : lesson.type === 'game' ? (
                           lesson.id === 'bus-out' ? <Bus className="h-5 w-5" /> :
                           lesson.id === 'alchimist-craft' ? <Sparkles className="h-5 w-5" /> :
+                          lesson.id === 'chess' ? <Crown className="h-5 w-5" /> :
                           <Gamepad2 className="h-5 w-5" />
                         ) : lesson.type === 'lesson' && typeof lesson.id === 'string' ? (
                           <Shapes className="h-5 w-5" />
@@ -438,7 +446,7 @@ const Eclaire = () => {
                             size="sm" 
                             className="w-full bg-emerald-500 hover:bg-emerald-600"
                             onClick={() => {
-                              if (typeof nextLesson.id === 'string' && ['algebra', 'laser-maze', 'geometry', 'arithmetic', 'physics-basics', 'computer-basics', 'logic-basics', 'division', 'fractions', 'tangram', 'advanced-geometry', 'bus-out', 'alchimist-craft'].includes(nextLesson.id)) {
+                              if (typeof nextLesson.id === 'string' && ['algebra', 'laser-maze', 'geometry', 'arithmetic', 'physics-basics', 'computer-basics', 'logic-basics', 'division', 'fractions', 'tangram', 'advanced-geometry', 'bus-out', 'alchimist-craft', 'chess'].includes(nextLesson.id)) {
                                 setActiveComponent(nextLesson.id);
                               } else {
                                 setSelectedLesson(nextLesson.id.toString());
