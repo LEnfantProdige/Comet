@@ -4,7 +4,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, ChevronRight, Play, BookOpen, Clock, Users, Zap, Atom, Rocket, Anchor } from "lucide-react";
+import { Sparkles, ChevronRight, Play, BookOpen, Clock, Users, Zap, Atom, Rocket, Anchor, Archive } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PeriodCard from "@/components/PeriodCard";
@@ -14,8 +14,9 @@ import GameCard from "@/components/science/GameCard";
 import InfinityCraft from "@/components/science/InfinityCraft";
 import SpaceElevator from "@/components/science/SpaceElevator";
 import DeepSeaExploration from "@/components/science/DeepSeaExploration";
+import InternetArchivesGame from "@/components/science/InternetArchivesGame";
 
-type ActiveGameType = "infinity-craft" | "space-elevator" | "deep-sea" | null;
+type ActiveGameType = "infinity-craft" | "space-elevator" | "deep-sea" | "internet-archives" | null;
 
 const Index = () => {
   const { t } = useLanguage();
@@ -33,6 +34,8 @@ const Index = () => {
         return <SpaceElevator onBack={() => setActiveGame(null)} />;
       case 'deep-sea':
         return <DeepSeaExploration onBack={() => setActiveGame(null)} />;
+      case 'internet-archives':
+        return <InternetArchivesGame onBack={() => setActiveGame(null)} />;
       default:
         return null;
     }
@@ -115,7 +118,7 @@ const Index = () => {
                 </p>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <GameCard 
                   title="Infinite Craft"
                   description="Combinez les éléments pour créer de nouveaux objets et découvrir l'univers infini des possibilités"
@@ -133,6 +136,12 @@ const Index = () => {
                   description="Plongez dans les profondeurs marines et explorez les mystères des océans"
                   icon={<Anchor className="h-6 w-6 text-white" />}
                   onClick={() => setActiveGame("deep-sea")}
+                />
+                <GameCard 
+                  title="Archives Internet"
+                  description="Voyagez dans le temps et explorez l'évolution du web depuis ses débuts"
+                  icon={<Archive className="h-6 w-6 text-white" />}
+                  onClick={() => setActiveGame("internet-archives")}
                 />
               </div>
             </div>
