@@ -2,12 +2,13 @@
 import React, { useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, Bell, Palette, Shield, Gamepad2 } from "lucide-react";
+import { User, Bell, Palette, Shield, Gamepad2, Scale } from "lucide-react";
 import ProfileTab from "@/components/account/ProfileTab";
 import AppearanceTab from "@/components/account/AppearanceTab";
 import GamesTab from "@/components/account/GamesTab";
 import NotificationsTab from "@/components/account/NotificationsTab";
 import PrivacyTab from "@/components/account/PrivacyTab";
+import LegalTab from "@/components/account/LegalTab";
 
 const Account = () => {
   const { t } = useLanguage();
@@ -28,7 +29,7 @@ const Account = () => {
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-emerald-900 py-8 px-4 md:px-8">
       <div className="container mx-auto max-w-6xl">
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="grid w-full grid-cols-5 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-lg mb-8">
+          <TabsList className="grid w-full grid-cols-6 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-lg mb-8">
             <TabsTrigger value="profile" className="flex-1">
               <User className="mr-2 h-4 w-4" />
               Profil
@@ -48,6 +49,10 @@ const Account = () => {
             <TabsTrigger value="privacy" className="flex-1">
               <Shield className="mr-2 h-4 w-4" />
               Confidentialité
+            </TabsTrigger>
+            <TabsTrigger value="legal" className="flex-1">
+              <Scale className="mr-2 h-4 w-4" />
+              Légal
             </TabsTrigger>
           </TabsList>
 
@@ -91,6 +96,10 @@ const Account = () => {
 
           <TabsContent value="privacy" className="space-y-6">
             <PrivacyTab />
+          </TabsContent>
+
+          <TabsContent value="legal" className="space-y-6">
+            <LegalTab />
           </TabsContent>
         </Tabs>
       </div>
