@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useTheme } from "next-themes";
@@ -20,6 +21,7 @@ import {
   Layers,
   Search
 } from "lucide-react";
+import Header from "@/components/Header";
 import NewsGameCard from "@/components/news/NewsGameCard";
 import Sudoku from "@/components/news/games/Sudoku";
 import Connections from "@/components/news/games/Connections";
@@ -267,6 +269,8 @@ const News = () => {
   
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <Header />
+      
       <div className="container mx-auto max-w-7xl px-4 py-8">
         {/* Header avec recherche */}
         <div className="flex items-center justify-between mb-8">
