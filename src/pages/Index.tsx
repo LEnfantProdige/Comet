@@ -8,7 +8,7 @@ import { Sparkles, ChevronRight, Play, BookOpen, Clock, Users, Zap, Atom, Rocket
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PeriodCard from "@/components/PeriodCard";
-import { historyData } from "@/data/historyData";
+import { historicalPeriods } from "@/data/historyData";
 import { useNavigate } from "react-router-dom";
 import GameCard from "@/components/science/GameCard";
 import InfinityCraft from "@/components/science/InfinityCraft";
@@ -38,8 +38,8 @@ const Index = () => {
     }
   };
 
-  const featuredPeriods = historyData.slice(0, 3);
-  const allPeriods = historyData.slice(3);
+  const featuredPeriods = historicalPeriods.slice(0, 3);
+  const allPeriods = historicalPeriods.slice(3);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-100 dark:from-gray-900 dark:to-slate-800">
@@ -151,7 +151,7 @@ const Index = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {featuredPeriods.map((period) => (
-                  <PeriodCard key={period.id} period={period} featured />
+                  <PeriodCard key={period.id} period={period} />
                 ))}
               </div>
             </div>
