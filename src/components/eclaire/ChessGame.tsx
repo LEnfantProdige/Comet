@@ -61,6 +61,12 @@ const ChessGame: React.FC<ChessGameProps> = ({ onBack, onComplete }) => {
   const [score, setScore] = useState(0);
   const [selectedLessonComponent, setSelectedLessonComponent] = useState<string | null>(null);
 
+  const handleLessonComplete = (xp: number) => {
+    setScore(prev => prev + xp);
+    onComplete(xp);
+    setSelectedLessonComponent(null);
+  };
+
   const pieceSymbols: Record<PieceType, Record<PieceColor, string>> = {
     king: { white: '♔', black: '♚' },
     queen: { white: '♕', black: '♛' },
@@ -327,12 +333,6 @@ const ChessGame: React.FC<ChessGameProps> = ({ onBack, onComplete }) => {
     const TacticsLesson = require('./chess/TacticsLesson').default;
     return <TacticsLesson onBack={() => setSelectedLessonComponent(null)} onComplete={handleLessonComplete} />;
   }
-
-  const handleLessonComplete = (xp: number) => {
-    setScore(prev => prev + xp);
-    onComplete(xp);
-    setSelectedLessonComponent(null);
-  };
 
   const renderBoard = () => (
     <div className="grid grid-cols-8 gap-0 border-2 border-gray-800 w-96 h-96 mx-auto">

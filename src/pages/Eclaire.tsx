@@ -27,7 +27,8 @@ import {
   Newspaper,
   Clock,
   Bus,
-  Crown
+  Crown,
+  TrendingUp
 } from "lucide-react";
 
 // Import des composants de leçons
@@ -45,6 +46,7 @@ import AdvancedGeometryLesson from "@/components/eclaire/AdvancedGeometryLesson"
 import BusOutGame from "@/components/eclaire/BusOutGame";
 import AlchimistCraft from "@/components/eclaire/AlchimistCraft";
 import ChessGame from "@/components/eclaire/ChessGame";
+import LevelingSystem from "@/components/eclaire/LevelingSystem";
 
 const Eclaire = () => {
   const { t } = useLanguage();
@@ -87,8 +89,8 @@ const Eclaire = () => {
       icon: <Brain className="h-8 w-8" />,
       color: 'bg-teal-500',
       progress: 80,
-      lessons: 6,
-      completed: 4
+      lessons: 7,
+      completed: 5
     },
     {
       id: 'computer',
@@ -269,6 +271,10 @@ const Eclaire = () => {
 
   if (activeComponent === 'chess') {
     return <ChessGame onBack={() => setActiveComponent(null)} onComplete={handleLessonComplete} />;
+  }
+
+  if (activeComponent === 'leveling-system') {
+    return <LevelingSystem onBack={() => setActiveComponent(null)} userProgress={userProgress} />;
   }
 
   if (selectedLesson) {
@@ -483,6 +489,14 @@ const Eclaire = () => {
             Retour à l'accueil
           </Button>
           <div className="flex items-center gap-4">
+            <Button
+              variant="outline"
+              onClick={() => setActiveComponent('leveling-system')}
+              className="flex items-center gap-2"
+            >
+              <TrendingUp className="h-4 w-4" />
+              Niveau {userProgress.level}
+            </Button>
             <div className="flex items-center gap-2 text-orange-500">
               <Flame className="h-5 w-5" />
               <span className="font-bold">{userProgress.streak}</span>
@@ -505,12 +519,18 @@ const Eclaire = () => {
             Comète
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Plateforme d'apprentissage interactive - Sciences, Histoire, Actualités et bien plus !
+            Plateforme d'apprentissage intelligente avec système de niveaux et personnalisation
           </p>
         </div>
 
-        {/* Stats utilisateur */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        {/* Stats utilisateur avec niveau */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+          <Card className="text-center cursor-pointer hover:shadow-md" onClick={() => setActiveComponent('leveling-system')}>
+            <CardContent className="p-4">
+              <div className="text-2xl font-bold text-purple-500">{userProgress.level}</div>
+              <div className="text-sm text-gray-500">Niveau</div>
+            </CardContent>
+          </Card>
           <Card className="text-center">
             <CardContent className="p-4">
               <div className="text-2xl font-bold text-emerald-500">{userProgress.xp}</div>
@@ -525,8 +545,8 @@ const Eclaire = () => {
           </Card>
           <Card className="text-center">
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-green-500">{userProgress.level}</div>
-              <div className="text-sm text-gray-500">Niveau</div>
+              <div className="text-2xl font-bold text-green-500">4/6</div>
+              <div className="text-sm text-gray-500">Modules actifs</div>
             </CardContent>
           </Card>
           <Card className="text-center">
@@ -650,6 +670,26 @@ const Eclaire = () => {
                     </div>
                   ))}
                 </div>
+              </CardContent>
+            </Card>
+
+            {/* Nouveau: Bouton système de niveaux */}
+            <Card className="border-2 border-emerald-200 bg-emerald-50">
+              <CardContent className="p-4 text-center">
+                <div className="mb-3">
+                  <TrendingUp className="h-8 w-8 text-emerald-500 mx-auto" />
+                </div>
+                <h3 className="font-semibold text-emerald-700 mb-2">Système de Progression</h3>
+                <p className="text-xs text-emerald-600 mb-3">
+                  Découvrez votre niveau, personnalisez votre apprentissage et débloquez des succès !
+                </p>
+                <Button 
+                  onClick={() => setActiveComponent('leveling-system')}
+                  className="w-full bg-emerald-500 hover:bg-emerald-600"
+                  size="sm"
+                >
+                  Explorer
+                </Button>
               </CardContent>
             </Card>
           </div>
