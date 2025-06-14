@@ -14,6 +14,7 @@ import QuizPage from "./pages/QuizPage";
 import Eclaire from "./pages/Eclaire";
 import Account from "./pages/Account";
 import News from "./pages/News";
+import InternetArchives from "./pages/InternetArchives";
 import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
 
@@ -28,7 +29,6 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <div className="flex flex-col min-h-screen">
-              <Header />
               <div className="flex-grow">
                 <Routes>
                   <Route path="/" element={<Index />} />
@@ -37,6 +37,7 @@ const App = () => (
                   <Route path="/period/:periodId/course/:courseId" element={<CourseDetail />} />
                   <Route path="/period/:periodId/course/:courseId/quiz" element={<QuizPage />} />
                   <Route path="/news" element={<News />} />
+                  <Route path="/archives" element={<InternetArchives />} />
                   <Route path="/account" element={<Account />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>

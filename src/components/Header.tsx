@@ -12,7 +12,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle
 } from "@/components/ui/navigation-menu";
-import { Sparkles, BookOpen, User, Newspaper, GraduationCap } from "lucide-react";
+import { Sparkles, BookOpen, User, Newspaper, GraduationCap, Archive } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function Header() {
@@ -25,6 +25,7 @@ export default function Header() {
     { path: "/comete", icon: GraduationCap, label: "Apprendre" },
     { path: "/", icon: BookOpen, label: "Histoire" },
     { path: "/news", icon: Newspaper, label: "Actualités" },
+    { path: "/archives", icon: Archive, label: "Archives" },
     { path: "/account", icon: User, label: "Compte" }
   ];
 
@@ -81,7 +82,7 @@ export default function Header() {
     );
   }
 
-  // Header desktop (inchangé)
+  // Header desktop
   return (
     <header className="border-b border-border bg-card shadow-sm hidden md:block">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -125,6 +126,15 @@ export default function Header() {
                 >
                   <Newspaper className="mr-2 h-4 w-4" />
                   Actualités
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink 
+                  className={navigationMenuTriggerStyle()} 
+                  onClick={() => navigate("/archives")}
+                >
+                  <Archive className="mr-2 h-4 w-4" />
+                  Archives
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
