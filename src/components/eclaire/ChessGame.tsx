@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -60,6 +59,7 @@ const ChessGame: React.FC<ChessGameProps> = ({ onBack, onComplete }) => {
   const [currentLesson, setCurrentLesson] = useState(0);
   const [puzzleIndex, setPuzzleIndex] = useState(0);
   const [score, setScore] = useState(0);
+  const [selectedLessonComponent, setSelectedLessonComponent] = useState<string | null>(null);
 
   const pieceSymbols: Record<PieceType, Record<PieceColor, string>> = {
     king: { white: '♔', black: '♚' },
@@ -75,31 +75,36 @@ const ChessGame: React.FC<ChessGameProps> = ({ onBack, onComplete }) => {
       title: "Les pièces et leurs mouvements",
       description: "Apprenez comment chaque pièce se déplace",
       completed: false,
-      xp: 20
+      xp: 20,
+      component: 'piece-movement'
     },
     {
       title: "Les règles spéciales",
       description: "Roque, prise en passant, promotion",
       completed: false,
-      xp: 25
+      xp: 25,
+      component: 'special-rules'
     },
     {
       title: "Tactiques de base",
       description: "Fourchette, clouage, découverte",
       completed: false,
-      xp: 30
+      xp: 30,
+      component: 'tactics'
     },
     {
       title: "Mat en 1 coup",
       description: "Reconnaître les mats simples",
       completed: false,
-      xp: 35
+      xp: 35,
+      component: 'mate-in-one'
     },
     {
       title: "Fins de partie",
       description: "Tours et dames vs roi nu",
       completed: false,
-      xp: 40
+      xp: 40,
+      component: 'endgames'
     }
   ];
 
@@ -303,6 +308,32 @@ const ChessGame: React.FC<ChessGameProps> = ({ onBack, onComplete }) => {
     onComplete(lesson.xp);
   };
 
+  const startLesson = (component: string) => {
+    setSelectedLessonComponent(component);
+  };
+
+  // Handle lesson component rendering
+  if (selectedLessonComponent === 'piece-movement') {
+    const PieceMovementLesson = require('./chess/PieceMovementLesson').default;
+    return <PieceMovementLesson onBack={() => setSelectedLessonComponent(null)} onComplete={handleLessonComplete} />;
+  }
+
+  if (selectedLessonComponent === 'special-rules') {
+    const SpecialRulesLesson = require('./chess/SpecialRulesLesson').default;
+    return <SpecialRulesLesson onBack={() => setSelectedLessonComponent(null)} onComplete={handleLessonComplete} />;
+  }
+
+  if (selectedLessonComponent === 'tactics') {
+    const TacticsLesson = require('./chess/TacticsLesson').default;
+    return <TacticsLesson onBack={() => setSelectedLessonComponent(null)} onComplete={handleLessonComplete} />;
+  }
+
+  const handleLessonComplete = (xp: number) => {
+    setScore(prev => prev + xp);
+    onComplete(xp);
+    setSelectedLessonComponent(null);
+  };
+
   const renderBoard = () => (
     <div className="grid grid-cols-8 gap-0 border-2 border-gray-800 w-96 h-96 mx-auto">
       {board.map((row, rowIndex) =>
@@ -501,7 +532,7 @@ const ChessGame: React.FC<ChessGameProps> = ({ onBack, onComplete }) => {
                       </Badge>
                       <Button 
                         size="sm" 
-                        onClick={() => completeLesson(index)}
+                        onClick={() => lesson.component ? startLesson(lesson.component) : completeLesson(index)}
                         disabled={lesson.completed}
                       >
                         {lesson.completed ? 'Terminé' : 'Commencer'}
