@@ -60,6 +60,8 @@ const ChessGame: React.FC<ChessGameProps> = ({ onBack, onComplete }) => {
   const [puzzleIndex, setPuzzleIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedLessonComponent, setSelectedLessonComponent] = useState<string | null>(null);
+  const [aiComments, setAiComments] = useState<string[]>([]);
+  const [currentRobot, setCurrentRobot] = useState<'alphago' | 'stockfish' | 'leela' | 'komodo'>('alphago');
 
   const handleLessonComplete = (xp: number) => {
     setScore(prev => prev + xp);
@@ -113,6 +115,57 @@ const ChessGame: React.FC<ChessGameProps> = ({ onBack, onComplete }) => {
       component: 'endgames'
     }
   ];
+
+  const aiRobots = {
+    alphago: {
+      name: "AlphaGo",
+      rating: 1400,
+      personality: "Stratégique et patient",
+      comments: [
+        "Excellent développement des pièces !",
+        "Je vois une tactique intéressante ici...",
+        "Cette position me rappelle une partie célèbre.",
+        "Votre style de jeu s'améliore !",
+        "Attention au roi exposé..."
+      ]
+    },
+    stockfish: {
+      name: "Stockfish",
+      rating: 1800,
+      personality: "Calculateur et précis",
+      comments: [
+        "Calcul forcé détecté.",
+        "Erreur tactique ! Revoyez ce coup.",
+        "Position équilibrée, +0.2 pour les blancs.",
+        "Sacrifice intéressant, mais incorrect.",
+        "Finale technique à venir."
+      ]
+    },
+    leela: {
+      name: "Leela Zero",
+      rating: 2000,
+      personality: "Intuitive et créative",
+      comments: [
+        "Cette position a un potentiel créatif !",
+        "L'intuition me dit que c'est prometteur.",
+        "Votre plan positionnel est solide.",
+        "J'aurais joué différemment, mais c'est jouable.",
+        "Belle combinaison tactique !"
+      ]
+    },
+    komodo: {
+      name: "Komodo Dragon",
+      rating: 2200,
+      personality: "Agressif et tactique",
+      comments: [
+        "Attaque directe recommandée !",
+        "Vos pièces manquent de coordination.",
+        "Pression constante sur le roi adverse.",
+        "Cette variante est très complexe.",
+        "Domination positionelle évidente."
+      ]
+    }
+  };
 
   const puzzles = [
     {
@@ -270,11 +323,21 @@ const ChessGame: React.FC<ChessGameProps> = ({ onBack, onComplete }) => {
     }
   };
 
+  const addAiComment = (comment: string) => {
+    setAiComments(prev => [...prev.slice(-4), comment]);
+  };
+
   const makeAiMove = useCallback(() => {
     if (currentPlayer !== 'black' || gameMode !== 'ai') return;
     
-    // Simple AI: make a random valid move
-    const possibleMoves: { from: Position; to: Position }[] = [];
+    const robot = aiRobots[currentRobot];
+    
+    // Add AI comment before move
+    const randomComment = robot.comments[Math.floor(Math.random() * robot.comments.length)];
+    addAiComment(`${robot.name}: ${randomComment}`);
+    
+    // AI logic based on difficulty and robot type
+    const possibleMoves: { from: Position; to: Position; score: number }[] = [];
     
     for (let fromRow = 0; fromRow < 8; fromRow++) {
       for (let fromCol = 0; fromCol < 8; fromCol++) {
@@ -285,7 +348,19 @@ const ChessGame: React.FC<ChessGameProps> = ({ onBack, onComplete }) => {
               if (isValidMove({ row: fromRow, col: fromCol }, { row: toRow, col: toCol }, piece)) {
                 const targetPiece = board[toRow][toCol];
                 if (!targetPiece || targetPiece.color !== piece.color) {
-                  possibleMoves.push({ from: { row: fromRow, col: fromCol }, to: { row: toRow, col: toCol } });
+                  let score = Math.random();
+                  
+                  // Score based on captures
+                  if (targetPiece) {
+                    const pieceValues = { pawn: 1, knight: 3, bishop: 3, rook: 5, queen: 9, king: 100 };
+                    score += pieceValues[targetPiece.type] * 2;
+                  }
+                  
+                  // Adjust for difficulty
+                  if (aiDifficulty === 'hard') score *= 2;
+                  if (aiDifficulty === 'easy') score *= 0.5;
+                  
+                  possibleMoves.push({ from: { row: fromRow, col: fromCol }, to: { row: toRow, col: toCol }, score });
                 }
               }
             }
@@ -295,12 +370,19 @@ const ChessGame: React.FC<ChessGameProps> = ({ onBack, onComplete }) => {
     }
     
     if (possibleMoves.length > 0) {
-      const randomMove = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
+      // Sort by score and pick from top moves based on difficulty
+      possibleMoves.sort((a, b) => b.score - a.score);
+      const topMoves = aiDifficulty === 'easy' ? possibleMoves.slice(0, 5) :
+                      aiDifficulty === 'medium' ? possibleMoves.slice(0, 3) :
+                      possibleMoves.slice(0, 2);
+      
+      const selectedMove = topMoves[Math.floor(Math.random() * topMoves.length)];
+      
       setTimeout(() => {
-        makeMove(randomMove.from, randomMove.to);
-      }, 1000);
+        makeMove(selectedMove.from, selectedMove.to);
+      }, 1500);
     }
-  }, [currentPlayer, gameMode, board]);
+  }, [currentPlayer, gameMode, board, aiDifficulty, currentRobot]);
 
   useEffect(() => {
     if (gameMode === 'ai') {
@@ -478,6 +560,80 @@ const ChessGame: React.FC<ChessGameProps> = ({ onBack, onComplete }) => {
                       <Lightbulb className="h-4 w-4 mr-2" />
                       Puzzle tactique
                     </Button>
+                  </CardContent>
+                </Card>
+
+                {gameMode === 'ai' && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Robot IA</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="grid grid-cols-2 gap-2">
+                        {Object.entries(aiRobots).map(([key, robot]) => (
+                          <Button
+                            key={key}
+                            onClick={() => setCurrentRobot(key as any)}
+                            variant={currentRobot === key ? 'default' : 'outline'}
+                            size="sm"
+                          >
+                            {robot.name}
+                          </Button>
+                        ))}
+                      </div>
+                      <div className="text-center">
+                        <div className="text-sm font-medium">{aiRobots[currentRobot].name}</div>
+                        <div className="text-xs text-gray-500">Rating: {aiRobots[currentRobot].rating}</div>
+                        <div className="text-xs text-gray-500">{aiRobots[currentRobot].personality}</div>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Difficulté</label>
+                        <div className="grid grid-cols-3 gap-1">
+                          <Button
+                            onClick={() => setAiDifficulty('easy')}
+                            variant={aiDifficulty === 'easy' ? 'default' : 'outline'}
+                            size="sm"
+                          >
+                            Facile
+                          </Button>
+                          <Button
+                            onClick={() => setAiDifficulty('medium')}
+                            variant={aiDifficulty === 'medium' ? 'default' : 'outline'}
+                            size="sm"
+                          >
+                            Moyen
+                          </Button>
+                          <Button
+                            onClick={() => setAiDifficulty('hard')}
+                            variant={aiDifficulty === 'hard' ? 'default' : 'outline'}
+                            size="sm"
+                          >
+                            Difficile
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Commentaires IA</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2 max-h-32 overflow-y-auto">
+                      {aiComments.length === 0 ? (
+                        <div className="text-sm text-gray-500 text-center">
+                          L'IA commentera vos coups...
+                        </div>
+                      ) : (
+                        aiComments.map((comment, index) => (
+                          <div key={index} className="text-sm p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                            {comment}
+                          </div>
+                        ))
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
 

@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import { usePageTitle } from "@/hooks/usePageTitle";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import HeroSection from "@/components/home/HeroSection";
@@ -15,6 +16,7 @@ import InternetArchivesGame from "@/components/science/InternetArchivesGame";
 type ActiveGameType = "infinity-craft" | "space-elevator" | "deep-sea" | "internet-archives" | null;
 
 const Index = () => {
+  usePageTitle("Accueil");
   const [activeGame, setActiveGame] = useState<ActiveGameType>(null);
 
   // Render the active game

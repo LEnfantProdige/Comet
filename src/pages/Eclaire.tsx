@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/hooks/useLanguage";
+import { usePageTitle } from "@/hooks/usePageTitle";
 import { useNavigate } from "react-router-dom";
 import { 
   Brain, 
@@ -51,6 +52,7 @@ import ChessGame from "@/components/eclaire/ChessGame";
 import LevelingSystem from "@/components/eclaire/LevelingSystem";
 
 const Eclaire = () => {
+  usePageTitle("Comète");
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [selectedModule, setSelectedModule] = useState<string | null>(null);
