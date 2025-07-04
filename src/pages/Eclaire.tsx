@@ -42,6 +42,8 @@ import LogicLesson from "@/components/eclaire/LogicLesson";
 import DivisionLesson from "@/components/eclaire/DivisionLesson";
 import FractionsLesson from "@/components/eclaire/FractionsLesson";
 import TangramGame from "@/components/eclaire/TangramGame";
+import TangramGameImproved from "@/components/eclaire/TangramGameImproved";
+import RummikubGame from "@/components/eclaire/RummikubGame";
 import AdvancedGeometryLesson from "@/components/eclaire/AdvancedGeometryLesson";
 import BusOutGame from "@/components/eclaire/BusOutGame";
 import AlchimistCraft from "@/components/eclaire/AlchimistCraft";
@@ -146,6 +148,8 @@ const Eclaire = () => {
       { id: 'deductive-reasoning', title: "Raisonnement déductif", description: "Tirer des conclusions logiques", completed: false, locked: false, type: 'lesson' },
       { id: 'laser-maze', title: "Labyrinthe Laser", description: "Jeu de logique avec miroirs", completed: true, locked: false, type: 'game' },
       { id: 'tangram', title: "Tangram", description: "Puzzle de formes géométriques", completed: false, locked: false, type: 'game' },
+      { id: 'tangram-advanced', title: "Tangram Avancé", description: "Puzzle avec zones de placement", completed: false, locked: false, type: 'game' },
+      { id: 'rummikub', title: "Rummikub", description: "Jeu de combinaisons de cartes", completed: false, locked: false, type: 'game' },
       { id: 'bus-out', title: "Bus Out", description: "Puzzle de parking avec bus", completed: false, locked: false, type: 'game' },
       { id: 'alchimist-craft', title: "Alchimist Craft", description: "Jeu de combinaison d'éléments", completed: false, locked: false, type: 'game' },
       { id: 'set-theory', title: "Théorie des ensembles", description: "Collections d'objets et relations", completed: false, locked: false, type: 'lesson' }
@@ -257,6 +261,14 @@ const Eclaire = () => {
     return <TangramGame onBack={() => setActiveComponent(null)} onComplete={handleLessonComplete} />;
   }
 
+  if (activeComponent === 'tangram-advanced') {
+    return <TangramGameImproved onBack={() => setActiveComponent(null)} onComplete={handleLessonComplete} />;
+  }
+
+  if (activeComponent === 'rummikub') {
+    return <RummikubGame onBack={() => setActiveComponent(null)} onComplete={handleLessonComplete} />;
+  }
+
   if (activeComponent === 'advanced-geometry') {
     return <AdvancedGeometryLesson onBack={() => setActiveComponent(null)} onComplete={handleLessonComplete} />;
   }
@@ -360,7 +372,7 @@ const Eclaire = () => {
                   }`}
                   onClick={() => {
                     if (!lesson.locked) {
-                      if (typeof lesson.id === 'string' && ['algebra', 'laser-maze', 'geometry', 'arithmetic', 'physics-basics', 'computer-basics', 'logic-basics', 'division', 'fractions', 'tangram', 'advanced-geometry', 'bus-out', 'alchimist-craft', 'chess'].includes(lesson.id)) {
+                      if (typeof lesson.id === 'string' && ['algebra', 'laser-maze', 'geometry', 'arithmetic', 'physics-basics', 'computer-basics', 'logic-basics', 'division', 'fractions', 'tangram', 'tangram-advanced', 'rummikub', 'advanced-geometry', 'bus-out', 'alchimist-craft', 'chess'].includes(lesson.id)) {
                         setActiveComponent(lesson.id);
                       } else {
                         setSelectedLesson(lesson.id.toString());
